@@ -229,28 +229,28 @@ body::before {
   box-shadow: 0.25rem 0.25rem 0 var(--line);
 }
 
-.signal-tag:nth-of-type(2) {
+.signal-tag:nth-of-type(1) {
   top: 12%;
   left: 7%;
   background: #62e9dd;
   transform: rotate(-4deg);
 }
 
-.signal-tag:nth-of-type(3) {
+.signal-tag:nth-of-type(2) {
   top: 34%;
   right: 4%;
   background: #ffdf4e;
   transform: rotate(5deg);
 }
 
-.signal-tag:nth-of-type(4) {
+.signal-tag:nth-of-type(3) {
   bottom: 9%;
   left: 36%;
   background: #a980ff;
   transform: rotate(3deg);
 }
 
-.signal-tag:nth-of-type(5) {
+.signal-tag:nth-of-type(4) {
   right: 9%;
   bottom: 14%;
   transform: rotate(-5deg);

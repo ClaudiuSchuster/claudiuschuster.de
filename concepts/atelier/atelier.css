@@ -70,6 +70,7 @@ body::before {
 }
 
 .flow-canvas {
+  container: flow-field / inline-size;
   border: 1px solid var(--line);
   border-radius: 45% 55% 52% 48% / 58% 42% 58% 42%;
   background:
@@ -78,6 +79,13 @@ body::before {
     rgb(17 12 27 / 66%);
   box-shadow: inset 0 0 7rem rgb(131 83 191 / 10%), 0 3rem 8rem rgb(0 0 0 / 28%);
   animation: breathe 9s ease-in-out infinite alternate;
+}
+
+@container flow-field (max-width: 30rem) {
+  .flow-canvas svg {
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 0 5rem, #000 6.25rem);
+    mask-image: radial-gradient(circle at 50% 50%, transparent 0 5rem, #000 6.25rem);
+  }
 }
 
 .flow-line {
@@ -119,24 +127,32 @@ body::before {
   color: rgb(255 249 242 / 75%);
 }
 
+.signal-tag {
+  will-change: transform;
+}
+
+.signal-tag:nth-of-type(1) {
+  top: 17%;
+  left: 17%;
+  animation: dodge-systems 18s ease-in-out infinite;
+}
+
 .signal-tag:nth-of-type(2) {
-  top: 14%;
-  left: 9%;
+  top: 19%;
+  right: 16%;
+  animation: dodge-curiosity 18s ease-in-out infinite;
 }
 
 .signal-tag:nth-of-type(3) {
-  top: 19%;
-  right: 8%;
+  bottom: 18%;
+  left: 16%;
+  animation: dodge-craft 18s ease-in-out infinite;
 }
 
 .signal-tag:nth-of-type(4) {
-  bottom: 17%;
-  left: 6%;
-}
-
-.signal-tag:nth-of-type(5) {
-  right: 7%;
-  bottom: 12%;
+  right: 16%;
+  bottom: 16%;
+  animation: dodge-care 18s ease-in-out infinite;
 }
 
 .section + .section {
@@ -234,6 +250,90 @@ body::before {
 
   to {
     border-radius: 53% 47% 43% 57% / 44% 57% 43% 56%;
+  }
+}
+
+@keyframes dodge-systems {
+  0%,
+  100% {
+    transform: translate3d(0.45rem, 0.1rem, 0) rotate(-0.4deg);
+  }
+
+  25% {
+    transform: translate3d(0.9rem, -0.35rem, 0) rotate(0.6deg);
+  }
+
+  50% {
+    transform: translate3d(0, 0.45rem, 0) rotate(-0.2deg);
+  }
+
+  75% {
+    transform: translate3d(0.6rem, 0.15rem, 0) rotate(0.4deg);
+  }
+}
+
+@keyframes dodge-curiosity {
+  0%,
+  100% {
+    transform: translate3d(0, 0.25rem, 0) rotate(0.3deg);
+  }
+
+  25% {
+    transform: translate3d(0.35rem, -0.25rem, 0) rotate(-0.5deg);
+  }
+
+  50% {
+    transform: translate3d(-0.65rem, 0.15rem, 0) rotate(0.2deg);
+  }
+
+  75% {
+    transform: translate3d(-0.15rem, 0.55rem, 0) rotate(-0.4deg);
+  }
+}
+
+@keyframes dodge-craft {
+  0%,
+  100% {
+    transform: translate3d(0.1rem, -0.2rem, 0) rotate(-0.2deg);
+  }
+
+  25% {
+    transform: translate3d(-0.3rem, -0.55rem, 0) rotate(0.5deg);
+  }
+
+  50% {
+    transform: translate3d(0.75rem, -0.15rem, 0) rotate(-0.4deg);
+  }
+
+  75% {
+    transform: translate3d(0.25rem, 0.25rem, 0) rotate(0.3deg);
+  }
+}
+
+@keyframes dodge-care {
+  0%,
+  100% {
+    transform: translate3d(-0.55rem, -0.3rem, 0) rotate(0.4deg);
+  }
+
+  25% {
+    transform: translate3d(-0.15rem, -0.65rem, 0) rotate(-0.3deg);
+  }
+
+  50% {
+    transform: translate3d(0, -0.1rem, 0) rotate(0.2deg);
+  }
+
+  75% {
+    transform: translate3d(-0.4rem, 0.15rem, 0) rotate(-0.5deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-canvas .signal-tag {
+    animation: none;
+    transform: none;
+    will-change: auto;
   }
 }
 
