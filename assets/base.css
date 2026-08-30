@@ -297,10 +297,14 @@ a {
 
 .section-intro {
   max-width: 50rem;
-  margin: 2rem 0 0 auto;
+  margin: 0 0 1rem auto;
   color: var(--muted);
   font-size: clamp(1.1rem, 2vw, 1.35rem);
   line-height: 1.7;
+}
+
+#about .section-header {
+  margin-bottom: 2rem;
 }
 
 .about-grid,
