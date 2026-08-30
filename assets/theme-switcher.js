@@ -42,8 +42,10 @@
 
   function updateDocument(worldName, announce = false) {
     const world = worlds[worldName];
-    document.title = worldTitle(world);
-    if (description) description.content = world.description[locale];
+    if (!root.hasAttribute('data-static-meta')) {
+      document.title = worldTitle(world);
+      if (description) description.content = world.description[locale];
+    }
     if (themeColor) themeColor.content = world.themeColor;
     controls.forEach((control) => {
       const isPrismatic = worldName === 'prismatic';

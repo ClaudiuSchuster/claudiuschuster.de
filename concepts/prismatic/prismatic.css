@@ -76,10 +76,20 @@ body::before {
 
 .hero-copy h1,
 .section-header h2,
-.contact-card h2 {
+.contact-card h2,
+.legal-heading {
   font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif;
   font-weight: 900;
   text-transform: uppercase;
+}
+
+.legal-heading {
+  text-transform: uppercase;
+}
+
+.legal-card {
+  border-width: 2px;
+  box-shadow: 0.5rem 0.5rem 0 var(--line);
 }
 
 .hero-copy h1 {

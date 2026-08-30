@@ -141,8 +141,8 @@ def check_social_preview() -> list[str]:
 
 def main() -> int:
     failures: list[str] = []
-    if len(HTML_FILES) != 6:
-        failures.append(f"expected 6 HTML files, found {len(HTML_FILES)}")
+    if len(HTML_FILES) != 7:
+        failures.append(f"expected 7 HTML files, found {len(HTML_FILES)}")
     for path in HTML_FILES:
         failures.extend(f"{path.relative_to(ROOT)}: {error}" for error in check_html(path))
     for path in (ROOT / "index.html", ROOT / "en.html"):

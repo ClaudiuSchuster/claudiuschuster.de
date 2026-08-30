@@ -66,6 +66,11 @@ def main() -> int:
         raise ValueError("social preview must be exactly 1200x630")
     social_name = write_asset("social-preview", "png", social_data)
 
+    profile_data = source_bytes("assets/profile.png")
+    if png_dimensions(profile_data) != (640, 640):
+        raise ValueError("profile image must be exactly 640x640")
+    profile_name = write_asset("profile", "png", profile_data)
+
     boot_text = source_bytes("assets/theme-boot.js").decode("utf-8")
     boot_text = require_replacement(
         boot_text,
@@ -97,9 +102,10 @@ def main() -> int:
         "assets/theme-boot.js": f"assets/{boot_name}",
         "assets/theme-switcher.js": f"assets/{switcher_name}",
         "assets/social-preview.png": f"assets/{social_name}",
+        "assets/profile.png": f"assets/{profile_name}",
     }
 
-    for page_name in ("index.html", "en.html"):
+    for page_name in ("index.html", "en.html", "impressum.html"):
         page = (ROOT / page_name).read_text(encoding="utf-8")
         for old, new in replacements.items():
             page = require_replacement(page, old, new, page_name)
@@ -118,6 +124,7 @@ def main() -> int:
         atelier_name,
         prismatic_name,
         social_name,
+        profile_name,
         boot_name,
         switcher_name,
     }

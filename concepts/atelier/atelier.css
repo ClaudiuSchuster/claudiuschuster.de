@@ -53,9 +53,15 @@ body::before {
 
 .hero-copy h1,
 .section-header h2,
-.contact-card h2 {
+.contact-card h2,
+.legal-heading {
   font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   font-weight: 500;
+}
+
+.legal-card {
+  border-radius: 1.25rem;
+  box-shadow: inset 0 0 2rem rgb(255 255 255 / 2%);
 }
 
 .hero-copy h1 em {
@@ -232,4 +238,3 @@ body::before {
     grid-template-columns: 1fr;
   }
 }
-
