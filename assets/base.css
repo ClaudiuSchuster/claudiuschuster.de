@@ -271,11 +271,22 @@ a {
   letter-spacing: 0.18em;
   line-height: 1;
   text-shadow: 0 1px 0 rgb(0 0 0 / 55%), 0 0 0.6rem rgb(0 0 0 / 65%);
+  transition: opacity 160ms ease;
   text-transform: uppercase;
 }
 
 .signal-status > span {
   display: block;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .signal-status {
+    opacity: 0;
+  }
+
+  .signal-core:hover .signal-status {
+    opacity: 1;
+  }
 }
 
 .signal-tag {
