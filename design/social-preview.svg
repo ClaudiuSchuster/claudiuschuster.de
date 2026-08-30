@@ -36,7 +36,7 @@
     <rect width="780" height="630" fill="url(#dark-grid)"/>
     <path d="M790-30H1230V660H650Z" fill="#f3efe6"/>
     <path d="M790-30H1230V660H650Z" fill="url(#dot-grid)"/>
-    <path d="M-72 510C-18 510 6 454 84 446C205 434 278 488 382 458C506 424 588 375 675 385C753 403 811 373 867 356" fill="none" stroke="url(#spectrum)" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 15"/>
+    <path d="M-72 510C-18 510 6 454 84 446C205 434 278 488 382 458C506 424 588 375 675 385C753 403 811 373 867 356" fill="none" stroke="url(#spectrum)" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 15" stroke-dashoffset="12"/>
     <circle cx="398" cy="453" r="6" fill="#f6bd7c"/>
     <circle cx="605" cy="388" r="5" fill="#70eadf"/>
     <path d="M790-30 650 660" stroke="#17131c" stroke-width="8"/>
