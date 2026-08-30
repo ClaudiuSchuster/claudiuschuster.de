@@ -182,12 +182,13 @@ body::before {
 }
 
 .flow-line-one {
+  stroke: #ff3f9b;
   stroke-dasharray: 4 11;
   animation: prism-flow 10s linear infinite;
 }
 
 .flow-line-two {
-  stroke: #ff3f9b;
+  stroke: #17131c;
   stroke-dasharray: 18 8;
   animation: prism-flow-reverse 14s linear infinite;
 }
