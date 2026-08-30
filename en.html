@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" data-world="atelier">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Claudiu Schuster connects cloud, automation and open source with technical depth and human curiosity.">
+    <title>Claudiu Schuster — Feel the data flow</title>
+    <link rel="stylesheet" href="assets/base.css">
+    <link rel="stylesheet" href="assets/world-switch.css?v=3">
+    <link id="world-theme" rel="stylesheet" href="concepts/atelier/atelier.css">
+    <script>
+      (() => {
+        document.documentElement.classList.add('js');
+        try {
+          if (localStorage.getItem('claudiuschuster-design-world') === 'prismatic') {
+            document.documentElement.dataset.world = 'prismatic';
+            document.querySelector('#world-theme').href = 'concepts/prismatic/prismatic.css';
+          }
+        } catch (_) {}
+      })();
+    </script>
+    <script src="assets/theme-switcher.js?v=2" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="world-flare" aria-hidden="true"></div>
+    <p class="visually-hidden" id="world-status" aria-live="polite"></p>
+
+    <header class="site-header site-shell">
+      <div class="header-identity">
+        <a class="brand" href="en.html" aria-label="Claudiu Schuster — Home"><span class="brand-mark">CS</span><span class="brand-copy"><strong>Claudiu Schuster</strong><span>human being · planet earth</span></span></a>
+        <button class="dimension-switch dimension-switch--atelier" type="button" role="switch" aria-checked="false" aria-label="Switch to Prismatic Workshop" data-world-target="prismatic"><span class="atelier-rail"><span class="atelier-orb"></span></span><span class="atelier-labels" aria-hidden="true"><span>A</span><span>C</span></span><span class="atelier-led" aria-hidden="true"></span></button>
+        <button class="dimension-switch dimension-switch--prismatic" type="button" role="switch" aria-checked="true" aria-label="Switch to Data Flow Atelier" data-world-target="atelier"><span class="prism-return" aria-hidden="true">A</span><span class="prism-current">C world</span><span class="prism-arrow" aria-hidden="true">↙</span></button>
+      </div>
+      <nav class="site-nav" aria-label="Main navigation"><ul class="nav-links"><li><a href="#about">About</a></li><li><a href="#work">Work</a></li><li><a href="#capabilities">Capabilities</a></li></ul><ul class="nav-actions"><li><a class="language-link" href="./" lang="de" hreflang="de">DE</a></li></ul></nav>
+    </header>
+
+    <main id="main">
+      <section class="hero site-shell" aria-labelledby="hero-title">
+        <div class="hero-copy"><p class="eyebrow"><span data-world-only="atelier">Cloud · Automation · Open Source</span><span data-world-only="prismatic">Feel the data flow</span></p><h1 id="hero-title"><span data-world-only="atelier">Feel the <em>data flow.</em></span><span data-world-only="prismatic">Curiosity <em>that ships.</em></span></h1><p class="hero-lead"><span data-world-only="atelier">I connect cloud, automation and open source into systems that run reliably, remain understandable and feel good to use.</span><span data-world-only="prismatic">I turn cloud, automation and open source into robust systems — with technical depth, joy in experimentation and a clear view of the people in front of them.</span></p><div class="hero-actions"><a class="button button-primary" href="#work"><span data-world-only="atelier">Explore the work</span><span data-world-only="prismatic">Show me the projects</span> <span class="button-arrow" aria-hidden="true">↓</span></a><a class="button" href="https://github.com/ClaudiuSchuster">GitHub <span class="button-arrow" aria-hidden="true">↗</span></a></div></div>
+        <div class="flow-canvas" aria-hidden="true"><svg viewBox="0 0 600 600" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="atelierGradientOne" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#70eadf"/><stop offset="0.48" stop-color="#f6bd7c"/><stop offset="1" stop-color="#ee6da9"/></linearGradient><linearGradient id="atelierGradientTwo" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a72e8"/><stop offset="1" stop-color="#f6bd7c"/></linearGradient></defs><path class="flow-line flow-line-one" d="M-40 430 C120 410 105 145 275 185 S420 520 650 310"/><path class="flow-line flow-line-two" d="M-50 185 C120 260 175 45 330 120 S430 420 650 460"/><circle class="flow-node" cx="116" cy="313" r="4"/><circle class="flow-node" cx="274" cy="184" r="4"/><circle class="flow-node" cx="429" cy="393" r="4"/><circle class="flow-node" cx="332" cy="121" r="4"/></svg><div class="signal-core"><div><strong>CS</strong><span><span data-world-only="atelier">online</span><span data-world-only="prismatic">build mode</span></span></div></div><span class="signal-tag">systems</span><span class="signal-tag">curiosity</span><span class="signal-tag">craft</span><span class="signal-tag">care</span></div>
+      </section>
+
+      <section class="section site-shell" id="about" aria-labelledby="about-title"><div class="section-header"><p class="section-kicker">01 · The human</p><h2 id="about-title"><span data-world-only="atelier">Technology with purpose and heart.</span><span data-world-only="prismatic">Generalist by choice. Builder by nature.</span></h2></div><p class="section-intro">I’m Claudiu — a human being from planet earth, a technical generalist by conviction and an open-source builder by passion. I think from operations to interface, from the first prototype to the calm system people rely on every day. My playground spans <strong>[A]utomation Systems</strong> to <strong>[Z]ero-Knowledge Proofs</strong>.</p><div class="about-grid"><article class="principle"><span class="principle-number">01 / Curiosity</span><h3>Curiosity with consequence</h3><p>New ideas are not merely collected. They are dismantled, understood and shaped into something useful.</p></article><article class="principle"><span class="principle-number">02 / Operations</span><h3>Built to be operated</h3><p>Good systems remain understandable, secure and repairable — long after the first wow moment.</p></article><article class="principle"><span class="principle-number">03 / Human</span><h3>The human in the loop</h3><p>Technical depth matters most when it builds trust and makes real work easier.</p></article></div></section>
+
+      <section class="section site-shell" id="work" aria-labelledby="work-title"><div class="section-header"><p class="section-kicker">02 · Selected work</p><h2 id="work-title"><span data-world-only="atelier">Open source that lives in the everyday.</span><span data-world-only="prismatic">Ideas turned into useful things.</span></h2></div><div class="project-grid"><a class="project-card" href="https://github.com/oss-singularity/proton-drive-linux"><span class="project-meta"><span>Linux · GTK · Python</span><span>01</span></span><h3>PDrive Control Center</h3><p>A native, conservatively safe Proton Drive experience for Linux — with resilient transfers, encrypted credentials and understandable recovery.</p><span class="project-link" aria-hidden="true">↗</span></a><a class="project-card" href="https://github.com/oss-singularity/cinnamon-chatgpt-usage"><span class="project-meta"><span>Cinnamon · JavaScript</span><span>02</span></span><h3>ChatGPT Usage</h3><p>Live limits, reset times and credits in the Cinnamon panel — compact, native and without unnecessary data exposure.</p><span class="project-link" aria-hidden="true">↗</span></a><a class="project-card" href="https://github.com/oss-singularity/cinnamon-system-monitor"><span class="project-meta"><span>Desktop craft</span><span>03</span></span><h3>Cinnamon, refined</h3><p>System monitoring and small desktop tools that feel as though they have always belonged there.</p><span class="project-link" aria-hidden="true">↗</span></a><a class="project-card" href="https://github.com/oss-singularity"><span class="project-meta"><span>Open-source lab</span><span>04</span></span><h3>OSS Singularity</h3><p>Engineering beyond the event horizon — tools, automation and experiments built for what comes next.</p><span class="project-link" aria-hidden="true">↗</span></a></div></section>
+
+      <section class="section site-shell" id="capabilities" aria-labelledby="capabilities-title"><div class="section-header"><p class="section-kicker">03 · Capabilities</p><h2 id="capabilities-title"><span data-world-only="atelier">Breadth in view. Depth in detail.</span><span data-world-only="prismatic">Full-spectrum engineering.</span></h2></div><div class="capability-grid"><article class="capability-card"><h3>Cloud & Platform</h3><p>Robust platforms across infrastructure, operations and developer experience.</p><ul class="tag-list"><li>Kubernetes</li><li>OpenShift</li><li>Azure</li><li>Hybrid Cloud</li><li>Terraform</li><li>Virtualization</li></ul></article><article class="capability-card"><h3>Automation & Delivery</h3><p>Repeatable paths from commit to resilient operations.</p><ul class="tag-list"><li>CI/CD</li><li>GitOps</li><li>ArgoCD</li><li>Ansible</li><li>PowerShell</li><li>Azure DevOps</li></ul></article><article class="capability-card"><h3>Systems & Software</h3><p>Pragmatic software engineering with a clear view of the full system.</p><ul class="tag-list"><li>Linux</li><li>Python</li><li>JavaScript</li><li>Bash</li><li>C#</li><li>SQL</li></ul></article><article class="capability-card"><h3>Emerging Systems</h3><p>Curiosity where new tools are only beginning to become reliable practice.</p><ul class="tag-list"><li>AI Agents</li><li>AI Skills</li><li>Blockchain</li><li>Solidity</li><li>Zero Knowledge</li><li>Prototyping</li></ul></article></div></section>
+
+      <section class="section site-shell" id="contact" aria-labelledby="contact-title"><div class="contact-card"><div><p class="section-kicker">04 · Say hello</p><h2 id="contact-title"><span data-world-only="atelier">Let’s build something useful.</span><span data-world-only="prismatic">Let’s make the next thing real.</span></h2><p>You’ll find me where the code lives. Explore my public projects, open a discussion or simply say hello.</p></div><a class="button button-primary" href="https://github.com/ClaudiuSchuster">Connect on GitHub <span aria-hidden="true">↗</span></a></div></section>
+    </main>
+
+    <footer class="site-footer site-shell"><span>© 2026 Claudiu Schuster · Planet Earth</span><span>No tracking. No cookies. <span data-world-only="atelier">Just signal.</span><span data-world-only="prismatic">Full spectrum.</span></span></footer>
+  </body>
+</html>

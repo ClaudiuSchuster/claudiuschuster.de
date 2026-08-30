@@ -1,0 +1,223 @@
+.header-identity {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+html:not([data-world="prismatic"]) [data-world-only="prismatic"] {
+  display: none;
+}
+
+html[data-world="prismatic"] [data-world-only="atelier"] {
+  display: none;
+}
+
+html[data-world="prismatic"] [data-world-only="prismatic"] {
+  display: revert;
+}
+
+.dimension-switch {
+  position: relative;
+  flex: none;
+  display: none;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.js:not([data-world="prismatic"]) .dimension-switch--atelier {
+  display: block;
+}
+
+html.js[data-world="prismatic"] .dimension-switch--prismatic {
+  display: grid;
+}
+
+.dimension-switch--atelier {
+  width: 7.7rem;
+  height: 2.55rem;
+  padding: 0;
+  border: 1px solid rgb(224 206 255 / 22%);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #21182f, #0d0915);
+  box-shadow: inset 0 0.2rem 0.7rem rgb(0 0 0 / 64%), 0 0.7rem 1.8rem rgb(0 0 0 / 25%);
+  color: #f8f4ff;
+}
+
+.atelier-rail {
+  position: absolute;
+  top: 0.28rem;
+  left: 0.3rem;
+  width: 5.55rem;
+  height: 1.95rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #0b0810, #181024);
+  box-shadow: inset 0 0.25rem 0.55rem rgb(0 0 0 / 75%), inset 0 1px rgb(255 255 255 / 7%);
+}
+
+.atelier-orb {
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  width: 1.65rem;
+  aspect-ratio: 1;
+  border: 1px solid rgb(255 255 255 / 22%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 26%, #fff4dc 0 8%, transparent 9%),
+    linear-gradient(145deg, #f6bd7c, #d86f9f 55%, #7959c2);
+  box-shadow: 0 0 1.15rem rgb(232 117 160 / 55%), inset -0.3rem -0.3rem 0.7rem rgb(57 23 87 / 45%);
+  transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 420ms ease;
+}
+
+.dimension-switch--atelier:hover .atelier-orb,
+.dimension-switch--atelier:focus-visible .atelier-orb {
+  filter: hue-rotate(48deg) saturate(1.2);
+  transform: translateX(3.58rem) rotate(180deg);
+}
+
+.atelier-labels {
+  position: absolute;
+  z-index: 2;
+  inset: 0.35rem 1.82rem 0.35rem 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 0.55rem;
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  pointer-events: none;
+}
+
+.atelier-labels span:first-child {
+  color: #1b0f20;
+}
+
+.atelier-led {
+  position: absolute;
+  top: 50%;
+  right: 0.58rem;
+  width: 0.52rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #70eadf;
+  box-shadow: 0 0 0.8rem #70eadf, inset 0 -0.1rem 0.18rem rgb(0 0 0 / 45%);
+  transform: translateY(-50%);
+}
+
+.dimension-switch--prismatic {
+  width: 7.9rem;
+  height: 2.65rem;
+  grid-template-columns: 2.15rem 1fr 1.85rem;
+  align-items: stretch;
+  padding: 0;
+  border: 2px solid #17131c;
+  border-radius: 0;
+  background: #fffaf1;
+  box-shadow: 0.35rem 0.35rem 0 #17131c;
+  color: #17131c;
+  transform: rotate(-1deg);
+  transition: box-shadow 160ms ease, transform 160ms ease;
+}
+
+.dimension-switch--prismatic:hover,
+.dimension-switch--prismatic:focus-visible {
+  box-shadow: 0.12rem 0.12rem 0 #17131c;
+  transform: translate(0.2rem, 0.2rem) rotate(1deg);
+}
+
+.prism-return,
+.prism-current,
+.prism-arrow {
+  display: grid;
+  place-items: center;
+  font-weight: 950;
+}
+
+.prism-return {
+  border-right: 2px solid #17131c;
+  background: #62e9dd;
+}
+
+.prism-current {
+  background: linear-gradient(135deg, #ffdf4e 0 50%, #ff3f9b 50%);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.prism-arrow {
+  border-left: 2px solid #17131c;
+  background: #a980ff;
+  font-size: 1rem;
+}
+
+.world-flare {
+  position: fixed;
+  z-index: 999;
+  inset: 0;
+  opacity: 0;
+  background:
+    radial-gradient(circle at 16% 8%, rgb(112 234 223 / 90%), transparent 22%),
+    conic-gradient(from 90deg at 50% 50%, #090711, #ff3f9b, #ffdf4e, #62e9dd, #a980ff, #090711);
+  pointer-events: none;
+  transform: scale(1.2);
+}
+
+html.world-switching .world-flare {
+  animation: world-flare 620ms cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@keyframes world-flare {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+
+  42%,
+  58% {
+    opacity: 0.88;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 720px) {
+  .header-identity {
+    gap: 0.6rem;
+  }
+
+  .dimension-switch--atelier,
+  .dimension-switch--prismatic {
+    transform: scale(0.9);
+    transform-origin: left center;
+  }
+
+  .dimension-switch--prismatic:hover,
+  .dimension-switch--prismatic:focus-visible {
+    transform: scale(0.9) translate(0.12rem, 0.12rem) rotate(1deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atelier-orb,
+  .dimension-switch--prismatic {
+    transition-duration: 1ms;
+  }
+
+  html.world-switching .world-flare {
+    animation: none;
+  }
+}
