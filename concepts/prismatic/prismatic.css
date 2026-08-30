@@ -208,7 +208,7 @@ body::before {
   transform: translate(-50%, -50%) rotate(-7deg);
 }
 
-.signal-core > div {
+.signal-status {
   transform: rotate(7deg);
 }
 
