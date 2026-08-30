@@ -11,6 +11,7 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 HTML_FILES = sorted(ROOT.glob("*.html")) + sorted(ROOT.glob("concepts/**/*.html"))
 CSS_FILES = sorted(ROOT.glob("assets/*.css")) + sorted(ROOT.glob("concepts/**/*.css"))
+SOCIAL_PREVIEW = ROOT / "assets/social-preview.png"
 
 
 class PageParser(HTMLParser):
@@ -99,14 +100,56 @@ def check_css(path: Path) -> list[str]:
     return errors
 
 
+def check_social_metadata(path: Path) -> list[str]:
+    parser = PageParser()
+    parser.feed(path.read_text(encoding="utf-8"))
+    meta = {
+        attrs.get("property") or attrs.get("name"): attrs.get("content", "")
+        for tag, attrs in parser.tags
+        if tag == "meta"
+    }
+    errors: list[str] = []
+    expected = {
+        "og:type": "website",
+        "og:image": "https://claudiuschuster.de/assets/social-preview.png",
+        "og:image:secure_url": "https://claudiuschuster.de/assets/social-preview.png",
+        "og:image:type": "image/png",
+        "og:image:width": "1200",
+        "og:image:height": "630",
+        "twitter:card": "summary_large_image",
+        "twitter:image": "https://claudiuschuster.de/assets/social-preview.png",
+    }
+    for key, value in expected.items():
+        if meta.get(key) != value:
+            errors.append(f"{key} must be {value}")
+    for key in ("og:title", "og:description", "og:image:alt", "twitter:title", "twitter:description", "twitter:image:alt"):
+        if not meta.get(key):
+            errors.append(f"missing {key}")
+    return errors
+
+
+def check_social_preview() -> list[str]:
+    data = SOCIAL_PREVIEW.read_bytes()
+    if data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR":
+        return ["assets/social-preview.png is not a valid PNG"]
+    width = int.from_bytes(data[16:20], "big")
+    height = int.from_bytes(data[20:24], "big")
+    if (width, height) != (1200, 630):
+        return [f"assets/social-preview.png must be 1200x630, found {width}x{height}"]
+    return []
+
+
 def main() -> int:
     failures: list[str] = []
     if len(HTML_FILES) != 6:
         failures.append(f"expected 6 HTML files, found {len(HTML_FILES)}")
     for path in HTML_FILES:
         failures.extend(f"{path.relative_to(ROOT)}: {error}" for error in check_html(path))
+    for path in (ROOT / "index.html", ROOT / "en.html"):
+        failures.extend(f"{path.relative_to(ROOT)}: {error}" for error in check_social_metadata(path))
     for path in CSS_FILES:
         failures.extend(f"{path.relative_to(ROOT)}: {error}" for error in check_css(path))
+    failures.extend(check_social_preview())
 
     if failures:
         print("Static site checks failed:")

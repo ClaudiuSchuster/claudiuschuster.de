@@ -4,6 +4,7 @@
   const controls = document.querySelectorAll('[data-world-target]');
   const liveRegion = document.querySelector('#world-status');
   const description = document.querySelector('meta[name="description"]');
+  const themeColor = document.querySelector('#theme-color');
   const locale = root.lang === 'en' ? 'en' : 'de';
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const storageKey = 'claudiuschuster-design-world';
@@ -18,6 +19,7 @@
         en: 'Claudiu Schuster connects cloud, automation and open source with technical depth and human curiosity.',
       },
       status: { de: 'Data Flow Atelier aktiv.', en: 'Data Flow Atelier active.' },
+      themeColor: '#090711',
     },
     prismatic: {
       href: 'concepts/prismatic/prismatic.css',
@@ -30,6 +32,7 @@
         en: 'Claudiu Schuster turns technical curiosity into robust cloud, automation and open-source systems.',
       },
       status: { de: 'Prismatic Workshop aktiv.', en: 'Prismatic Workshop active.' },
+      themeColor: '#f3efe6',
     },
   };
 
@@ -41,6 +44,7 @@
     const world = worlds[worldName];
     document.title = worldTitle(world);
     if (description) description.content = world.description[locale];
+    if (themeColor) themeColor.content = world.themeColor;
     controls.forEach((control) => {
       const isPrismatic = worldName === 'prismatic';
       control.setAttribute('aria-checked', String(isPrismatic));

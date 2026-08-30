@@ -20,11 +20,19 @@ Open <http://127.0.0.1:4180/>.
 ## Checks
 
 ```bash
-make check
+make build
 ```
 
-The root page and `/en.html` are the combined production candidates. The individual concept pages remain available as design references during review.
+This validates the source and creates the deployable `dist/` bundle. Every CSS, JavaScript and social-preview asset receives a content-derived SHA-256 fingerprint in its filename. HTML is never cached; fingerprinted assets may safely be cached as immutable for one year without mixing a new document with stale styles.
+
+Preview the exact production bundle with:
+
+```bash
+make serve-dist
+```
+
+The root page and `/en.html` are the combined production candidates. The individual concept pages remain available as design references during review. The Open Graph and Twitter metadata reference a dedicated 1200×630 social card for Telegram and other link previews.
 
 ## Production safety
 
-Production replacement remains blocked until the local backup, restore verification and final website review are complete and an explicit deployment approval is given. DNS, mail routing, certificates and `.well-known` content remain outside the replacement scope.
+Production deployment uses only the generated `dist/` bundle. DNS, mail routing, certificates and `.well-known` content remain outside the replacement scope.
