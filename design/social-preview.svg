@@ -40,8 +40,8 @@
 
     <circle cx="710" cy="84" r="88" fill="#d86f9f" opacity="0.22" filter="url(#glow)"/>
     <circle cx="716" cy="84" r="42" fill="url(#orb)" stroke="#ffffff" stroke-opacity="0.34"/>
-    <path d="M-60 500C145 396 222 570 398 420S654 350 844 462" fill="none" stroke="url(#spectrum)" stroke-width="3" stroke-dasharray="10 15"/>
-    <circle cx="398" cy="420" r="6" fill="#f6bd7c"/>
+    <path d="M-60 500C145 440 222 548 382 472C520 450 614 352 700 420S844 462 844 462" fill="none" stroke="url(#spectrum)" stroke-width="3" stroke-dasharray="10 15"/>
+    <circle cx="398" cy="463" r="6" fill="#f6bd7c"/>
     <circle cx="605" cy="382" r="5" fill="#70eadf"/>
 
     <g transform="translate(72 58)">
@@ -52,7 +52,7 @@
     </g>
 
     <text x="70" y="235" fill="#fffaf1" font-family="DejaVu Sans, sans-serif" font-size="86" font-weight="850" letter-spacing="-4">CLAUDIU</text>
-    <text x="66" y="334" fill="#fffaf1" font-family="DejaVu Sans, sans-serif" font-size="108" font-weight="900" letter-spacing="-6">SCHUSTER</text>
+    <text x="66" y="334" fill="#fffaf1" font-family="DejaVu Sans, sans-serif" font-size="86" font-weight="900" letter-spacing="-6">SCHUSTER</text>
     <text x="72" y="405" fill="#f6bd7c" font-family="DejaVu Serif, Georgia, serif" font-size="43" font-style="italic">Feel the data flow.</text>
 
     <g transform="translate(72 500)" font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="800" letter-spacing="2">
@@ -73,8 +73,8 @@
     </g>
 
     <g transform="translate(858 314) rotate(-3)">
-      <rect x="12" y="12" width="248" height="88" fill="#17131c"/>
-      <rect width="248" height="88" fill="#fffaf1" stroke="#17131c" stroke-width="5"/>
+      <rect x="12" y="12" width="292" height="88" fill="#17131c"/>
+      <rect width="292" height="88" fill="#fffaf1" stroke="#17131c" stroke-width="5"/>
       <rect x="15" y="15" width="58" height="58" fill="#62e9dd" stroke="#17131c" stroke-width="4"/>
       <circle cx="44" cy="44" r="13" fill="#17131c"/>
       <text x="93" y="42" fill="#17131c" font-family="DejaVu Sans, sans-serif" font-size="14" font-weight="900" letter-spacing="2">BUILD MODE</text>
