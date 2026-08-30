@@ -70,6 +70,7 @@ def main() -> int:
     if png_dimensions(profile_data) != (640, 640):
         raise ValueError("profile image must be exactly 640x640")
     profile_name = write_asset("profile", "png", profile_data)
+    favicon_name = write_asset("favicon", "svg", source_bytes("assets/favicon.svg"))
 
     boot_text = source_bytes("assets/theme-boot.js").decode("utf-8")
     boot_text = require_replacement(
@@ -103,6 +104,7 @@ def main() -> int:
         "assets/theme-switcher.js": f"assets/{switcher_name}",
         "assets/social-preview.png": f"assets/{social_name}",
         "assets/profile.png": f"assets/{profile_name}",
+        "assets/favicon.svg": f"assets/{favicon_name}",
     }
 
     for page_name in ("index.html", "en.html", "impressum.html"):
@@ -125,6 +127,7 @@ def main() -> int:
         prismatic_name,
         social_name,
         profile_name,
+        favicon_name,
         boot_name,
         switcher_name,
     }

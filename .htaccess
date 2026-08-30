@@ -23,7 +23,7 @@ Options -Indexes
     Header always set Expires "0"
   </FilesMatch>
 
-  <FilesMatch "\.[0-9a-f]{12}\.(?:css|js|png)$">
+  <FilesMatch "\.[0-9a-f]{12}\.(?:css|js|png|svg)$">
     Header always set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 </IfModule>
@@ -32,4 +32,5 @@ Options -Indexes
   AddType text/css .css
   AddType application/javascript .js
   AddType image/png .png
+  AddType image/svg+xml .svg
 </IfModule>

@@ -12,6 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 HTML_FILES = sorted(ROOT.glob("*.html")) + sorted(ROOT.glob("concepts/**/*.html"))
 CSS_FILES = sorted(ROOT.glob("assets/*.css")) + sorted(ROOT.glob("concepts/**/*.css"))
 SOCIAL_PREVIEW = ROOT / "assets/social-preview.png"
+FAVICON = ROOT / "assets/favicon.svg"
+HTACCESS = ROOT / ".htaccess"
 
 
 class PageParser(HTMLParser):
@@ -54,6 +56,18 @@ def check_html(path: Path) -> list[str]:
         errors.append("missing viewport meta")
     if not any(tag == "meta" and attrs.get("name") == "description" and attrs.get("content") for tag, attrs in tags):
         errors.append("missing meta description")
+    favicon = next(
+        (attrs for tag, attrs in tags if tag == "link" and attrs.get("rel") == "icon"),
+        {},
+    )
+    if not favicon:
+        errors.append("missing favicon link")
+    elif favicon.get("type") != "image/svg+xml":
+        errors.append("favicon must declare image/svg+xml")
+    else:
+        href = favicon.get("href", "")
+        if not href or not (path.parent / href).resolve().is_file():
+            errors.append(f"missing favicon asset: {href}")
 
     ids = {attrs.get("id") for _, attrs in tags if attrs.get("id")}
     for tag, attrs in tags:
@@ -139,6 +153,23 @@ def check_social_preview() -> list[str]:
     return []
 
 
+def check_favicon() -> list[str]:
+    text = FAVICON.read_text(encoding="utf-8")
+    errors: list[str] = []
+    if '<svg xmlns="http://www.w3.org/2000/svg"' not in text:
+        errors.append("assets/favicon.svg is not a standalone SVG")
+    if 'viewBox="0 0 64 64"' not in text:
+        errors.append("assets/favicon.svg must use a square 64x64 viewBox")
+    if "<title" not in text:
+        errors.append("assets/favicon.svg must have an accessible title")
+    htaccess = HTACCESS.read_text(encoding="utf-8")
+    if "(?:css|js|png|svg)" not in htaccess:
+        errors.append("fingerprinted SVG assets must receive immutable caching")
+    if "AddType image/svg+xml .svg" not in htaccess:
+        errors.append(".htaccess must declare the SVG MIME type")
+    return errors
+
+
 def main() -> int:
     failures: list[str] = []
     if len(HTML_FILES) != 7:
@@ -150,6 +181,7 @@ def main() -> int:
     for path in CSS_FILES:
         failures.extend(f"{path.relative_to(ROOT)}: {error}" for error in check_css(path))
     failures.extend(check_social_preview())
+    failures.extend(check_favicon())
 
     if failures:
         print("Static site checks failed:")
