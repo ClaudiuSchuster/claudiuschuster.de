@@ -70,7 +70,6 @@ body::before {
 }
 
 .flow-canvas {
-  container: flow-field / inline-size;
   border: 1px solid var(--line);
   border-radius: 45% 55% 52% 48% / 58% 42% 58% 42%;
   background:
@@ -79,13 +78,6 @@ body::before {
     rgb(17 12 27 / 66%);
   box-shadow: inset 0 0 7rem rgb(131 83 191 / 10%), 0 3rem 8rem rgb(0 0 0 / 28%);
   animation: breathe 9s ease-in-out infinite alternate;
-}
-
-@container flow-field (max-width: 30rem) {
-  .flow-canvas svg {
-    -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 0 5rem, #000 6.25rem);
-    mask-image: radial-gradient(circle at 50% 50%, transparent 0 5rem, #000 6.25rem);
-  }
 }
 
 .flow-line {
