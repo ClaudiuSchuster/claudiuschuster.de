@@ -98,6 +98,12 @@ body::before {
   line-height: 0.82;
 }
 
+@media (min-width: 881px) {
+  html[lang="en"] .hero-copy h1 {
+    font-size: clamp(4rem, 9vw, 7.2rem);
+  }
+}
+
 .hero-copy h1 em {
   position: relative;
   display: inline-block;
@@ -387,6 +393,10 @@ body::before {
 
 @media (max-width: 880px) {
   .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .section-header {
     grid-template-columns: 1fr;
   }
 
