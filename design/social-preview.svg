@@ -40,8 +40,8 @@
 
     <circle cx="710" cy="84" r="88" fill="#d86f9f" opacity="0.22" filter="url(#glow)"/>
     <circle cx="716" cy="84" r="42" fill="url(#orb)" stroke="#ffffff" stroke-opacity="0.34"/>
-    <path d="M-60 500C145 440 222 548 382 472C520 450 614 352 700 420S844 462 844 462" fill="none" stroke="url(#spectrum)" stroke-width="3" stroke-dasharray="10 15"/>
-    <circle cx="398" cy="463" r="6" fill="#f6bd7c"/>
+    <path d="M-72 510C-18 510 6 454 84 446C205 434 278 488 382 458C520 424 614 352 700 420S844 462 844 462" fill="none" stroke="url(#spectrum)" stroke-width="3" stroke-dasharray="10 15"/>
+    <circle cx="398" cy="454" r="6" fill="#f6bd7c"/>
     <circle cx="605" cy="382" r="5" fill="#70eadf"/>
 
     <g transform="translate(72 58)">
