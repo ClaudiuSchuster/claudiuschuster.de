@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Small dependency-free structural checks for the static site and concept pages."""
+"""Small dependency-free structural checks for the static site."""
 
 from __future__ import annotations
 
@@ -198,8 +198,8 @@ def check_favicon() -> list[str]:
 
 def main() -> int:
     failures: list[str] = []
-    if len(HTML_FILES) != 7:
-        failures.append(f"expected 7 HTML files, found {len(HTML_FILES)}")
+    if len(HTML_FILES) != 3:
+        failures.append(f"expected 3 HTML files, found {len(HTML_FILES)}")
     for path in HTML_FILES:
         failures.extend(f"{path.relative_to(ROOT)}: {error}" for error in check_html(path))
     for path in (ROOT / "index.html", ROOT / "en.html"):

@@ -12,7 +12,7 @@
 }
 
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
   background:
     radial-gradient(circle at 12% 9%, rgb(127 79 196 / 19%), transparent 30rem),
     radial-gradient(circle at 88% 20%, rgb(241 103 162 / 15%), transparent 34rem),
@@ -35,6 +35,26 @@ body::before {
   border: 1px solid var(--line);
   background: linear-gradient(135deg, rgb(246 189 124 / 18%), rgb(144 92 232 / 28%));
   box-shadow: inset 0 0 1.2rem rgb(255 255 255 / 5%);
+}
+
+.site-header {
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 1.15rem;
+  background: rgb(9 7 17 / 76%);
+  box-shadow: 0 0.9rem 2.5rem rgb(0 0 0 / 18%);
+  backdrop-filter: blur(16px);
+}
+
+.site-header.is-scrolled {
+  background: rgb(26 20 39 / 90%);
+  box-shadow: 0 0.9rem 2.5rem rgb(0 0 0 / 30%), 0 0 1.5rem rgb(246 189 124 / 7%);
+}
+
+@media (max-width: 880px) {
+  .site-header {
+    align-items: center;
+  }
 }
 
 .nav-links a,

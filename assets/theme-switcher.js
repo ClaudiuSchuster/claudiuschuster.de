@@ -1,4 +1,46 @@
 (() => {
+  let initialized = false;
+
+  function setupHeaderScroll() {
+    if (initialized) return;
+    const header = document.querySelector('.site-header');
+    if (!header) return;
+    initialized = true;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let framePending = false;
+
+    function updateHeader() {
+      const scrollY = Math.max(window.scrollY, 0);
+      const progress = Math.min(scrollY / 180, 1);
+      header.classList.toggle('is-scrolled', scrollY > 24);
+      header.style.setProperty('--header-scale', (1 - progress * 0.025).toFixed(3));
+      header.style.setProperty('--header-lift', `${(progress * 0.15).toFixed(3)}rem`);
+      framePending = false;
+    }
+
+    function requestHeaderUpdate() {
+      if (framePending) return;
+      framePending = true;
+      window.requestAnimationFrame(updateHeader);
+    }
+
+    header.style.setProperty('--header-scale', '1');
+    header.style.setProperty('--header-lift', '0rem');
+    window.addEventListener('scroll', requestHeaderUpdate, { passive: true });
+    reducedMotion.addEventListener('change', requestHeaderUpdate);
+    updateHeader();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupHeaderScroll, { once: true });
+    window.addEventListener('load', setupHeaderScroll, { once: true });
+  } else {
+    setupHeaderScroll();
+  }
+})();
+
+(() => {
   const root = document.documentElement;
   const stylesheet = document.querySelector('#world-theme');
   const controls = document.querySelectorAll('[data-world-target]');
