@@ -264,7 +264,6 @@ body::before {
 
 .signal-status {
   color: rgb(255 249 242 / 75%);
-  transform: rotate(7deg);
 }
 
 .signal-tag {
