@@ -9,7 +9,7 @@ import struct
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 DIST = ROOT / "dist"
 DIST_ASSETS = DIST / "assets"
 HASH_LENGTH = 12
@@ -58,8 +58,8 @@ def main() -> int:
 
     base_name = write_asset("base", "css", source_bytes("assets/base.css"))
     switch_name = write_asset("world-switch", "css", source_bytes("assets/world-switch.css"))
-    atelier_name = write_asset("atelier", "css", source_bytes("concepts/atelier/atelier.css"))
-    prismatic_name = write_asset("prismatic", "css", source_bytes("concepts/prismatic/prismatic.css"))
+    atelier_name = write_asset("atelier", "css", source_bytes("assets/themes/atelier.css"))
+    prismatic_name = write_asset("prismatic", "css", source_bytes("assets/themes/prismatic.css"))
 
     social_data = source_bytes("assets/social-preview.png")
     if png_dimensions(social_data) != (1200, 630):
@@ -75,7 +75,7 @@ def main() -> int:
     boot_text = source_bytes("assets/theme-boot.js").decode("utf-8")
     boot_text = require_replacement(
         boot_text,
-        "concepts/prismatic/prismatic.css",
+        "assets/themes/prismatic.css",
         f"assets/{prismatic_name}",
         "assets/theme-boot.js",
     )
@@ -84,13 +84,13 @@ def main() -> int:
     switcher_text = source_bytes("assets/theme-switcher.js").decode("utf-8")
     switcher_text = require_replacement(
         switcher_text,
-        "concepts/atelier/atelier.css",
+        "assets/themes/atelier.css",
         f"assets/{atelier_name}",
         "assets/theme-switcher.js",
     )
     switcher_text = require_replacement(
         switcher_text,
-        "concepts/prismatic/prismatic.css",
+        "assets/themes/prismatic.css",
         f"assets/{prismatic_name}",
         "assets/theme-switcher.js",
     )
@@ -99,7 +99,7 @@ def main() -> int:
     replacements = {
         "assets/base.css": f"assets/{base_name}",
         "assets/world-switch.css": f"assets/{switch_name}",
-        "concepts/atelier/atelier.css": f"assets/{atelier_name}",
+        "assets/themes/atelier.css": f"assets/{atelier_name}",
         "assets/theme-boot.js": f"assets/{boot_name}",
         "assets/theme-switcher.js": f"assets/{switcher_name}",
         "assets/social-preview.png": f"assets/{social_name}",

@@ -16,7 +16,7 @@ The site is deliberately dependency-free. It ships semantic HTML, hand-written C
 - German and English share the same structure and behavior.
 - Core content remains available without JavaScript and respects reduced-motion preferences.
 
-The two theme stylesheets under [`concepts/`](concepts/) power both design directions. The root pages combine them into the production experience.
+The two theme stylesheets under [`assets/themes/`](assets/themes/) power both design directions. The root pages combine them into the production experience. The social-preview source and renderer live under [`assets/source/`](assets/source/), with the scripts in `assets/source/scripts/`; regenerate the PNG with `make render-social-preview`.
 
 ## Engineering highlights
 

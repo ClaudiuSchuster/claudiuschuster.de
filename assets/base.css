@@ -134,8 +134,7 @@ a {
   text-decoration: none;
 }
 
-.language-link,
-.concept-link {
+.language-link {
   display: inline-flex;
   min-height: 2.4rem;
   align-items: center;
@@ -651,8 +650,7 @@ a {
     width: min(100% - 1.25rem, 1180px);
   }
 
-  .brand-copy,
-  .concept-link {
+  .brand-copy {
     display: none;
   }
 
