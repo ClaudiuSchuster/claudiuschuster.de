@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Claudiu Schuster — Feel the data flow ...</title>
+  <desc id="desc">A dark atmospheric engineering world opens into a bright prismatic workshop.</desc>
+  <defs>
+    <linearGradient id="night" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#090711"/>
+      <stop offset="0.58" stop-color="#130c20"/>
+      <stop offset="1" stop-color="#281338"/>
+    </linearGradient>
+    <radialGradient id="orb" cx="32%" cy="25%" r="80%">
+      <stop offset="0" stop-color="#fff4dc"/>
+      <stop offset="0.12" stop-color="#f6bd7c"/>
+      <stop offset="0.55" stop-color="#d86f9f"/>
+      <stop offset="1" stop-color="#6f4fb5"/>
+    </radialGradient>
+    <linearGradient id="spectrum" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#62e9dd"/>
+      <stop offset="0.34" stop-color="#ffdf4e"/>
+      <stop offset="0.68" stop-color="#ff3f9b"/>
+      <stop offset="1" stop-color="#a980ff"/>
+    </linearGradient>
+    <pattern id="dark-grid" width="56" height="56" patternUnits="userSpaceOnUse">
+      <path d="M56 0H0V56" fill="none" stroke="#ffffff" stroke-opacity="0.055"/>
+    </pattern>
+    <pattern id="dot-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#17131c" fill-opacity="0.17"/>
+    </pattern>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+    <clipPath id="card"><rect width="1200" height="630" rx="0"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#card)">
+    <rect width="1200" height="630" fill="url(#night)"/>
+    <rect width="780" height="630" fill="url(#dark-grid)"/>
+    <path d="M790-30H1230V660H650Z" fill="#f3efe6"/>
+    <path d="M790-30H1230V660H650Z" fill="url(#dot-grid)"/>
+    <path d="M-72 510C-18 510 6 454 84 446C205 434 278 488 382 458C506 424 588 375 675 385C753 403 811 373 867 356" fill="none" stroke="url(#spectrum)" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 15" stroke-dashoffset="12"/>
+    <circle cx="398" cy="453" r="6" fill="#f6bd7c"/>
+    <circle cx="605" cy="388" r="5" fill="#70eadf"/>
+    <path d="M790-30 650 660" stroke="#17131c" stroke-width="8"/>
+
+    <circle cx="710" cy="84" r="88" fill="#d86f9f" opacity="0.22" filter="url(#glow)"/>
+    <circle cx="716" cy="84" r="42" fill="url(#orb)" stroke="#ffffff" stroke-opacity="0.34"/>
+
+    <g transform="translate(72 58)">
+      <circle cx="34" cy="34" r="34" fill="#21172f" stroke="#f6bd7c" stroke-opacity="0.55" stroke-width="2"/>
+      <text x="88" y="27" fill="#f6bd7c" font-family="DejaVu Sans, sans-serif" font-size="15" font-weight="800" letter-spacing="3">HUMAN BEING</text>
+      <text x="88" y="51" fill="#b7adc8" font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="600" letter-spacing="2">PLANET EARTH</text>
+    </g>
+
+    <text x="70" y="235" fill="#fffaf1" font-family="DejaVu Sans, sans-serif" font-size="86" font-weight="850" letter-spacing="-4">CLAUDIU</text>
+    <text x="66" y="334" fill="#fffaf1" font-family="DejaVu Sans, sans-serif" font-size="86" font-weight="900" letter-spacing="-6">SCHUSTER</text>
+    <text x="72" y="405" fill="#f6bd7c" font-family="DejaVu Serif, Georgia, serif" font-size="43" font-style="italic">Feel the data flow ...</text>
+
+    <g transform="translate(72 500)" font-family="DejaVu Sans, sans-serif" font-size="13" font-weight="800" letter-spacing="2">
+      <rect width="112" height="38" rx="19" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.18"/>
+      <text x="56" y="25" fill="#d5cce3" text-anchor="middle">CLOUD</text>
+      <rect x="126" width="166" height="38" rx="19" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.18"/>
+      <text x="209" y="25" fill="#d5cce3" text-anchor="middle">AUTOMATION</text>
+      <rect x="306" width="196" height="38" rx="19" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.18"/>
+      <text x="404" y="25" fill="#d5cce3" text-anchor="middle">OPEN SOURCE</text>
+    </g>
+    <text x="76" y="586" fill="#b7adc8" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="700" letter-spacing="1.2">claudiuschuster.de</text>
+
+    <g transform="translate(820 80) rotate(3)">
+      <rect x="14" y="14" width="272" height="170" fill="#17131c"/>
+      <rect width="272" height="170" fill="url(#spectrum)" stroke="#17131c" stroke-width="5"/>
+      <path d="M0 112H272M90 0V170M194 0V170" fill="none" stroke="#17131c" stroke-width="4"/>
+      <circle cx="228" cy="128" r="18" fill="#fffaf1" stroke="#17131c" stroke-width="4"/>
+      <path d="m219 128 7 7 13-16" fill="none" stroke="#17131c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <g transform="translate(820 314) rotate(-3)">
+      <rect x="12" y="12" width="292" height="88" fill="#17131c"/>
+      <rect width="292" height="88" fill="#fffaf1" stroke="#17131c" stroke-width="5"/>
+      <rect x="15" y="15" width="58" height="58" fill="#62e9dd" stroke="#17131c" stroke-width="4"/>
+      <circle cx="44" cy="44" r="13" fill="#17131c"/>
+      <text x="93" y="42" fill="#17131c" font-family="DejaVu Sans, sans-serif" font-size="14" font-weight="900" letter-spacing="2">BUILD MODE</text>
+      <text x="93" y="63" fill="#5b5360" font-family="DejaVu Sans, sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">SYSTEMS · CRAFT · CARE</text>
+    </g>
+
+    <g transform="translate(956 454) rotate(5)">
+      <rect x="10" y="10" width="162" height="92" fill="#17131c"/>
+      <rect width="162" height="92" fill="#ffdf4e" stroke="#17131c" stroke-width="5"/>
+      <path d="M0 46H162M54 0V92M108 0V92" stroke="#17131c" stroke-width="4"/>
+      <circle cx="27" cy="23" r="7" fill="#ff3f9b" stroke="#17131c" stroke-width="3"/>
+      <circle cx="81" cy="69" r="7" fill="#a980ff" stroke="#17131c" stroke-width="3"/>
+      <circle cx="135" cy="23" r="7" fill="#62e9dd" stroke="#17131c" stroke-width="3"/>
+    </g>
+
+    <rect x="6" y="6" width="1188" height="618" fill="none" stroke="#17131c" stroke-width="12"/>
+  </g>
+</svg>
