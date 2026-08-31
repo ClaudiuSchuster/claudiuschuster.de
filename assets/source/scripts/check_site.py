@@ -8,9 +8,9 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 
-ROOT = Path(__file__).resolve().parents[1]
-HTML_FILES = sorted(ROOT.glob("*.html")) + sorted(ROOT.glob("concepts/**/*.html"))
-CSS_FILES = sorted(ROOT.glob("assets/*.css")) + sorted(ROOT.glob("concepts/**/*.css"))
+ROOT = Path(__file__).resolve().parents[3]
+HTML_FILES = sorted(ROOT.glob("*.html"))
+CSS_FILES = sorted(ROOT.glob("assets/*.css")) + sorted(ROOT.glob("assets/themes/*.css"))
 SOCIAL_PREVIEW = ROOT / "assets/social-preview.png"
 FAVICON = ROOT / "assets/favicon.svg"
 HTACCESS = ROOT / ".htaccess"
@@ -111,7 +111,7 @@ def check_css(path: Path) -> list[str]:
     if "outline: none" in text or "outline:none" in text:
         errors.append("focus outlines must not be removed")
     if "!important" in text:
-        errors.append("avoid !important in the concept styles")
+        errors.append("avoid !important in the theme styles")
     return errors
 
 
