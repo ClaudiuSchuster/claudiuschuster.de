@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Claudiu Schuster</title>
+  <defs>
+    <linearGradient id="spectrum" x1="10" y1="8" x2="54" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#70eadf"/>
+      <stop offset="0.34" stop-color="#ffdf4e"/>
+      <stop offset="0.68" stop-color="#ff3f9b"/>
+      <stop offset="1" stop-color="#a980ff"/>
+    </linearGradient>
+    <linearGradient id="facet" x1="20" y1="17" x2="43" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fffaf1" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#a980ff" stop-opacity="0.06"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="15" fill="#090711"/>
+  <rect x="3" y="3" width="58" height="58" rx="14" fill="none" stroke="#fffaf1" stroke-opacity="0.14" stroke-width="2"/>
+  <path d="M32 9 52 29 32 55 12 29Z" fill="#171020" stroke="url(#spectrum)" stroke-width="4" stroke-linejoin="round"/>
+  <path d="m12 29 12-12 8 12 8-12 12 12-20 26Z" fill="url(#facet)"/>
+  <path d="M12 29h40M24 17l8 12 8-12M32 29v26" fill="none" stroke="#fffaf1" stroke-opacity="0.7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="32" cy="29" r="3" fill="#fffaf1"/>
+  <path d="M51 8v8M47 12h8" fill="none" stroke="#fffaf1" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
