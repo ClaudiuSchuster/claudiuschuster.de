@@ -258,6 +258,7 @@ body::before {
   border-radius: 0;
   background: #ff3f9b;
   box-shadow: 0.7rem 0.7rem 0 var(--line);
+  animation: prism-core-shadow-wander 42s ease-in-out infinite;
   transform: translate(-50%, -50%) rotate(-7deg);
 }
 
@@ -445,6 +446,45 @@ body::before {
   }
 }
 
+@keyframes prism-core-shadow-wander {
+  0%,
+  100% {
+    box-shadow: 0.7rem 0.7rem 0 var(--line);
+  }
+
+  12% {
+    box-shadow: -0.09rem 0.98rem 0 var(--line);
+  }
+
+  26% {
+    box-shadow: -0.96rem 0.26rem 0 var(--line);
+  }
+
+  38% {
+    box-shadow: -0.57rem -0.82rem 0 var(--line);
+  }
+
+  49% {
+    box-shadow: -0.98rem -0.09rem 0 var(--line);
+  }
+
+  61% {
+    box-shadow: 0 -1rem 0 var(--line);
+  }
+
+  74% {
+    box-shadow: 0.87rem -0.5rem 0 var(--line);
+  }
+
+  85% {
+    box-shadow: 0.26rem -0.96rem 0 var(--line);
+  }
+
+  94% {
+    box-shadow: 0.94rem 0.34rem 0 var(--line);
+  }
+}
+
 @keyframes prism-tag-systems {
   0%,
   100% {
@@ -502,6 +542,12 @@ body::before {
 
   70% {
     transform: translate3d(0.3rem, 0.3rem, 0) rotate(-6deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signal-core {
+    animation: none;
   }
 }
 
