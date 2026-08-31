@@ -88,14 +88,14 @@ body::before {
 
 .flow-line-one {
   stroke: url(#atelierGradientOne);
-  stroke-dasharray: 7 11;
-  animation: flow 16s linear infinite;
+  stroke-dasharray: 7 7;
+  animation: flow 20s linear infinite;
 }
 
 .flow-line-two {
   stroke: url(#atelierGradientTwo);
-  stroke-dasharray: 3 13;
-  animation: flow-reverse 21s linear infinite;
+  stroke-dasharray: 3 7;
+  animation: flow-reverse 26.25s linear infinite;
 }
 
 .flow-node {
@@ -126,25 +126,25 @@ body::before {
 .signal-tag:nth-of-type(1) {
   top: 17%;
   left: 17%;
-  animation: dodge-systems 18s ease-in-out infinite;
+  animation: dodge-systems 20s ease-in-out infinite;
 }
 
 .signal-tag:nth-of-type(2) {
   top: 19%;
   right: 16%;
-  animation: dodge-curiosity 18s ease-in-out infinite;
+  animation: dodge-curiosity 23s ease-in-out infinite;
 }
 
 .signal-tag:nth-of-type(3) {
   bottom: 18%;
   left: 16%;
-  animation: dodge-craft 18s ease-in-out infinite;
+  animation: dodge-craft 21s ease-in-out infinite;
 }
 
 .signal-tag:nth-of-type(4) {
   right: 16%;
   bottom: 16%;
-  animation: dodge-care 18s ease-in-out infinite;
+  animation: dodge-care 24s ease-in-out infinite;
 }
 
 .section + .section {
@@ -248,76 +248,76 @@ body::before {
 @keyframes dodge-systems {
   0%,
   100% {
-    transform: translate3d(0.45rem, 0.1rem, 0) rotate(-0.4deg);
+    transform: translate3d(0.8rem, 0.2rem, 0) rotate(-0.7deg);
   }
 
   25% {
-    transform: translate3d(0.9rem, -0.35rem, 0) rotate(0.6deg);
+    transform: translate3d(1.65rem, -0.75rem, 0) rotate(1.1deg);
   }
 
   50% {
-    transform: translate3d(0, 0.45rem, 0) rotate(-0.2deg);
+    transform: translate3d(-0.45rem, 0.95rem, 0) rotate(-0.65deg);
   }
 
   75% {
-    transform: translate3d(0.6rem, 0.15rem, 0) rotate(0.4deg);
+    transform: translate3d(1.05rem, 0.35rem, 0) rotate(0.75deg);
   }
 }
 
 @keyframes dodge-curiosity {
   0%,
   100% {
-    transform: translate3d(0, 0.25rem, 0) rotate(0.3deg);
+    transform: translate3d(0.2rem, 0.45rem, 0) rotate(0.55deg);
   }
 
   25% {
-    transform: translate3d(0.35rem, -0.25rem, 0) rotate(-0.5deg);
+    transform: translate3d(0.85rem, -0.7rem, 0) rotate(-1deg);
   }
 
   50% {
-    transform: translate3d(-0.65rem, 0.15rem, 0) rotate(0.2deg);
+    transform: translate3d(-1.4rem, 0.3rem, 0) rotate(0.65deg);
   }
 
   75% {
-    transform: translate3d(-0.15rem, 0.55rem, 0) rotate(-0.4deg);
+    transform: translate3d(-0.35rem, 1.05rem, 0) rotate(-0.8deg);
   }
 }
 
 @keyframes dodge-craft {
   0%,
   100% {
-    transform: translate3d(0.1rem, -0.2rem, 0) rotate(-0.2deg);
+    transform: translate3d(0.3rem, -0.45rem, 0) rotate(-0.55deg);
   }
 
   25% {
-    transform: translate3d(-0.3rem, -0.55rem, 0) rotate(0.5deg);
+    transform: translate3d(-0.85rem, -1.1rem, 0) rotate(1deg);
   }
 
   50% {
-    transform: translate3d(0.75rem, -0.15rem, 0) rotate(-0.4deg);
+    transform: translate3d(1.5rem, -0.3rem, 0) rotate(-0.85deg);
   }
 
   75% {
-    transform: translate3d(0.25rem, 0.25rem, 0) rotate(0.3deg);
+    transform: translate3d(0.55rem, 0.7rem, 0) rotate(0.65deg);
   }
 }
 
 @keyframes dodge-care {
   0%,
   100% {
-    transform: translate3d(-0.55rem, -0.3rem, 0) rotate(0.4deg);
+    transform: translate3d(-1.05rem, -0.55rem, 0) rotate(0.75deg);
   }
 
   25% {
-    transform: translate3d(-0.15rem, -0.65rem, 0) rotate(-0.3deg);
+    transform: translate3d(-0.35rem, -1.25rem, 0) rotate(-0.75deg);
   }
 
   50% {
-    transform: translate3d(0, -0.1rem, 0) rotate(0.2deg);
+    transform: translate3d(0.5rem, -0.2rem, 0) rotate(0.6deg);
   }
 
   75% {
-    transform: translate3d(-0.4rem, 0.15rem, 0) rotate(-0.5deg);
+    transform: translate3d(-0.8rem, 0.55rem, 0) rotate(-1deg);
   }
 }
 

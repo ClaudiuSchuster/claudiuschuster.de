@@ -219,15 +219,32 @@ a {
 
 .flow-canvas svg {
   position: absolute;
+  z-index: 2;
   inset: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
 
-.signal-core {
+.flow-shape {
   position: absolute;
   z-index: 2;
+  top: 0;
+  left: 0;
+  display: none;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.flow-canvas--interactive svg {
+  z-index: 5;
+  pointer-events: none;
+}
+
+.signal-core {
+  position: absolute;
+  z-index: 3;
   display: grid;
   width: 9rem;
   aspect-ratio: 1;
@@ -291,7 +308,7 @@ a {
 
 .signal-tag {
   position: absolute;
-  z-index: 3;
+  z-index: 4;
   padding: 0.55rem 0.75rem;
   border: 1px solid var(--line);
   border-radius: 999px;
