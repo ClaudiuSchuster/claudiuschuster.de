@@ -55,13 +55,22 @@ a {
 }
 
 .site-header {
-  position: relative;
+  position: sticky;
+  top: 0.75rem;
   z-index: 20;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
   min-height: 5.5rem;
+  transform: translateY(var(--header-lift, 0rem)) scale(var(--header-scale, 1));
+  transform-origin: top center;
+  transition: min-height 220ms ease, padding 220ms ease, border-color 220ms ease, background 220ms ease, box-shadow 220ms ease, transform 160ms ease;
+  will-change: transform;
+}
+
+.site-header.is-scrolled {
+  min-height: 4.6rem;
 }
 
 .brand {
@@ -600,8 +609,13 @@ a {
 
 @media (max-width: 880px) {
   .site-header {
+    top: 0.5rem;
     align-items: flex-start;
     padding-block: 1rem;
+  }
+
+  .site-header.is-scrolled {
+    padding-block: 0.6rem;
   }
 
   .nav-links {

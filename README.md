@@ -16,7 +16,7 @@ The site is deliberately dependency-free. It ships semantic HTML, hand-written C
 - German and English share the same structure and behavior.
 - Core content remains available without JavaScript and respects reduced-motion preferences.
 
-The individual concept pages under [`concepts/`](concepts/) preserve both design directions as reviewable references. The root pages combine them into the production experience.
+The two theme stylesheets under [`concepts/`](concepts/) power both design directions. The root pages combine them into the production experience.
 
 ## Engineering highlights
 
