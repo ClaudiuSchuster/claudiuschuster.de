@@ -23,10 +23,7 @@
     },
     prismatic: {
       href: 'concepts/prismatic/prismatic.css',
-      title: {
-        de: 'Claudiu Schuster — Neugier, die liefert',
-        en: 'Claudiu Schuster — Curiosity that ships',
-      },
+      title: 'Claudiu Schuster — Feel the data flow ...',
       description: {
         de: 'Claudiu Schuster macht aus technischer Neugier robuste Cloud-, Automation- und Open-Source-Systeme.',
         en: 'Claudiu Schuster turns technical curiosity into robust cloud, automation and open-source systems.',
