@@ -287,8 +287,8 @@ a {
   font-weight: 800;
   letter-spacing: 0.18em;
   line-height: 1;
-  text-shadow: 0 1px 0 rgb(0 0 0 / 55%), 0 0 0.6rem rgb(0 0 0 / 65%);
-  transition: opacity 160ms ease;
+  text-shadow: 0 1px 0 rgb(0 0 0 / 55%), 0 0 0.5rem rgb(0 0 0 / 65%);
+  animation: signal-status-breathe 7.2s ease-in-out infinite;
   text-transform: uppercase;
 }
 
@@ -296,13 +296,16 @@ a {
   display: block;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .signal-status {
+@keyframes signal-status-breathe {
+  0%,
+  100% {
     opacity: 0;
+    text-shadow: 0 1px 0 rgb(0 0 0 / 55%), 0 0 0.5rem rgb(0 0 0 / 65%);
   }
 
-  .signal-core:hover .signal-status {
+  50% {
     opacity: 1;
+    text-shadow: 0 1px 0 rgb(0 0 0 / 55%), 0 0 0.8rem rgb(255 249 242 / 32%), 0 0 1.2rem rgb(255 249 242 / 14%);
   }
 }
 
@@ -680,6 +683,12 @@ a {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .signal-status {
+    animation: none;
+    opacity: 1;
+    text-shadow: 0 1px 0 rgb(0 0 0 / 55%), 0 0 0.5rem rgb(0 0 0 / 65%);
   }
 
   *,
