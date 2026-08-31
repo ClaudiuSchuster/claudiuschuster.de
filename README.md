@@ -16,7 +16,7 @@ The site is deliberately dependency-free. It ships semantic HTML, hand-written C
 - German and English share the same structure and behavior.
 - Core content remains available without JavaScript and respects reduced-motion preferences.
 
-The two theme stylesheets under [`assets/themes/`](assets/themes/) power both design directions. The root pages combine them into the production experience. The social-preview source and renderer live under [`assets/source/`](assets/source/), with the scripts in `assets/source/scripts/`; regenerate the PNG with `make render-social-preview`.
+The two theme stylesheets under [`assets/`](assets/) power both design directions. The root pages combine them into the production experience. The social-preview source and renderer live under [`assets/`](assets/), with the build and validation scripts in `assets/scripts/`; regenerate the PNG with `make render-social-preview`.
 
 ## Engineering highlights
 
@@ -56,8 +56,6 @@ The Open Graph and Twitter metadata reference a dedicated 1200×630 social card 
 ## Production safety
 
 Only the generated `dist/` bundle is deployed. DNS, mail routing, certificates and `.well-known` content remain outside the replacement scope.
-
-Security reports should follow the private process in [SECURITY.md](SECURITY.md). Contributions are described in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 

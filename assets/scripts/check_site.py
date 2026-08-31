@@ -8,9 +8,9 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]
 HTML_FILES = sorted(ROOT.glob("*.html"))
-CSS_FILES = sorted(ROOT.glob("assets/*.css")) + sorted(ROOT.glob("assets/themes/*.css"))
+CSS_FILES = sorted(ROOT.glob("assets/*.css"))
 SOCIAL_PREVIEW = ROOT / "assets/social-preview.png"
 FAVICON = ROOT / "assets/favicon.svg"
 HTACCESS = ROOT / ".htaccess"

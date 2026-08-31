@@ -54,7 +54,7 @@
 
   const worlds = {
     atelier: {
-      href: 'assets/themes/atelier.css',
+      href: 'assets/atelier.css',
       title: 'Claudiu Schuster — Feel the data flow ...',
       description: {
         de: 'Claudiu Schuster verbindet Cloud, Automation und Open Source mit technischer Tiefe und menschlicher Neugier.',
@@ -64,7 +64,7 @@
       themeColor: '#090711',
     },
     prismatic: {
-      href: 'assets/themes/prismatic.css',
+      href: 'assets/prismatic.css',
       title: 'Claudiu Schuster — Feel the data flow ...',
       description: {
         de: 'Claudiu Schuster macht aus technischer Neugier robuste Cloud-, Automation- und Open-Source-Systeme.',

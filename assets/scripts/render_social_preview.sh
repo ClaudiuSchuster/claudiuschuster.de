@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-SOURCE="$ROOT_DIR/assets/source/social-preview.svg"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+SOURCE="$ROOT_DIR/assets/social-preview.svg"
 PROFILE="$ROOT_DIR/assets/profile.png"
 OUTPUT="$ROOT_DIR/assets/social-preview.png"
 TEMP_DIR="$(mktemp -d)"
