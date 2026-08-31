@@ -13,7 +13,7 @@
   const worlds = {
     atelier: {
       href: 'concepts/atelier/atelier.css',
-      title: 'Claudiu Schuster — Feel the data flow',
+      title: 'Claudiu Schuster — Feel the data flow ...',
       description: {
         de: 'Claudiu Schuster verbindet Cloud, Automation und Open Source mit technischer Tiefe und menschlicher Neugier.',
         en: 'Claudiu Schuster connects cloud, automation and open source with technical depth and human curiosity.',

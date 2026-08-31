@@ -2,7 +2,7 @@
 
 [![Verify](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/verify.yml/badge.svg)](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/verify.yml)
 
-[![Claudiu Schuster — Feel the data flow](assets/social-preview.png)](https://claudiuschuster.de/)
+[![Claudiu Schuster — Feel the data flow ...](assets/social-preview.png)](https://claudiuschuster.de/)
 
 The source of [claudiuschuster.de](https://claudiuschuster.de/) — a bilingual personal website and an executable portfolio of design, frontend and operational craft.
 
