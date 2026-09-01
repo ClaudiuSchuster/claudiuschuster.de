@@ -50,6 +50,26 @@
   const locale = root.lang === 'en' ? 'en' : 'de';
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const storageKey = 'claudiuschuster-design-world';
+  const scrollAnchorSelectors = [
+    ['hero-start', 'main > .hero'],
+    ['about-start', '#about'],
+    ['about-header', '#about .section-header'],
+    ['about-intro', '#about .section-intro'],
+    ['about-content', '#about .about-grid'],
+    ['work-start', '#work'],
+    ['work-header', '#work .section-header'],
+    ['work-content', '#work .project-grid'],
+    ['work-card-1', '#work .project-card:nth-child(1)'],
+    ['work-card-2', '#work .project-card:nth-child(2)'],
+    ['work-card-3', '#work .project-card:nth-child(3)'],
+    ['work-card-4', '#work .project-card:nth-child(4)'],
+    ['capabilities-start', '#capabilities'],
+    ['capabilities-header', '#capabilities .section-header'],
+    ['capabilities-content', '#capabilities .capability-grid'],
+    ['contact-start', '#contact'],
+    ['contact-content', '#contact .contact-card'],
+    ['footer', '.site-footer'],
+  ];
   let busy = false;
 
   const worlds = {
@@ -114,8 +134,131 @@
     });
   }
 
+  function viewportFocusOffset() {
+    const header = document.querySelector('.site-header');
+    const headerHeight = header?.offsetHeight || 0;
+    return headerHeight + Math.max(0, window.innerHeight - headerHeight) * 0.4;
+  }
+
+  function documentTop(element) {
+    return element.getBoundingClientRect().top + window.scrollY;
+  }
+
+  function scrollAnchors() {
+    const anchors = [];
+    let previousTop = -1;
+    scrollAnchorSelectors.forEach(([key, selector]) => {
+      const element = document.querySelector(selector);
+      if (!element) return;
+      const top = documentTop(element);
+      // Animated/transformed elements can briefly overlap. Keep the ordered,
+      // stable anchor stream monotonic so interpolation remains predictable.
+      if (top <= previousTop + 1) return;
+      anchors.push({ key, top });
+      previousTop = top;
+    });
+    return anchors;
+  }
+
+  function captureScrollPosition() {
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    const scrollY = Math.max(0, window.scrollY);
+    const focusOffset = viewportFocusOffset();
+    return {
+      atStart: scrollY <= 1,
+      atEnd: maxScroll - scrollY <= 8,
+      maxScroll,
+      focusOffset,
+      focusLine: scrollY + focusOffset,
+      anchors: scrollAnchors(),
+    };
+  }
+
+  function interpolatedFocusLine(position, targetAnchors, targetEnd) {
+    const sourcePoints = [
+      { key: 'page-start', top: 0 },
+      ...position.anchors,
+      { key: 'page-end', top: position.maxScroll + position.focusOffset },
+    ];
+    const targetPoints = [
+      { key: 'page-start', top: 0 },
+      ...targetAnchors,
+      { key: 'page-end', top: targetEnd },
+    ];
+    const targetByKey = new Map(targetPoints.map((point) => [point.key, point]));
+    const usableSourcePoints = sourcePoints.filter((point) => targetByKey.has(point.key));
+    let left = usableSourcePoints[0];
+    let right = usableSourcePoints[usableSourcePoints.length - 1];
+    for (let index = 1; index < usableSourcePoints.length; index += 1) {
+      if (position.focusLine <= usableSourcePoints[index].top) {
+        right = usableSourcePoints[index];
+        left = usableSourcePoints[index - 1];
+        break;
+      }
+    }
+
+    const targetLeft = targetByKey.get(left.key);
+    const targetRight = targetByKey.get(right.key);
+    if (!targetLeft || !targetRight || right.top <= left.top) {
+      return targetLeft?.top || 0;
+    }
+    const progress = Math.min(1, Math.max(0, (position.focusLine - left.top) / (right.top - left.top)));
+    return targetLeft.top + (targetRight.top - targetLeft.top) * progress;
+  }
+
+  function restoreScrollPosition(position) {
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    if (position.atStart) {
+      window.scrollTo(0, 0);
+      return;
+    }
+    if (position.atEnd) {
+      window.scrollTo(0, maxScroll);
+      return;
+    }
+
+    const targetFocusOffset = viewportFocusOffset();
+    const targetFocusLine = interpolatedFocusLine(
+      { ...position, maxScroll: position.maxScroll, focusOffset: position.focusOffset },
+      scrollAnchors(),
+      maxScroll + targetFocusOffset,
+    );
+    const targetY = Math.min(
+      maxScroll,
+      Math.max(0, targetFocusLine - targetFocusOffset),
+    );
+    window.scrollTo(0, targetY);
+  }
+
+  function waitForFrames(count) {
+    return new Promise((resolve) => {
+      const next = () => {
+        if (count <= 0) {
+          resolve();
+          return;
+        }
+        count -= 1;
+        window.requestAnimationFrame(next);
+      };
+      next();
+    });
+  }
+
+  async function restoreAfterThemeChange(position) {
+    await waitForFrames(2);
+    restoreScrollPosition(position);
+    // The sticky header transitions between theme-specific heights. Reapply
+    // after that short transition so the focal line is correct in the settled
+    // layout as well, especially around section boundaries.
+    await new Promise((resolve) => window.setTimeout(resolve, 240));
+    restoreScrollPosition(position);
+    await new Promise((resolve) => window.setTimeout(resolve, 360));
+    restoreScrollPosition(position);
+  }
+
   async function activate(worldName) {
     if (busy || !worlds[worldName] || root.dataset.world === worldName) return;
+    const position = captureScrollPosition();
     busy = true;
     root.classList.add('world-switching');
     controls.forEach((control) => { control.disabled = true; });
@@ -124,6 +267,7 @@
       await loadStylesheet(worldName);
       root.dataset.world = worldName;
       updateDocument(worldName, true);
+      await restoreAfterThemeChange(position);
       try {
         window.localStorage.setItem(storageKey, worldName);
       } catch (_) {
