@@ -434,6 +434,29 @@ a {
   text-decoration: none;
 }
 
+.project-card::after {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background-image: var(--project-preview-overlay), var(--project-preview-url);
+  background-position: center, right center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%, auto 100%;
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+
+.project-card.is-preview-active::after {
+  opacity: 1;
+}
+
+.project-card > * {
+  position: relative;
+  z-index: 1;
+}
+
 .project-card:nth-child(3),
 .project-card:nth-child(4) {
   grid-column: span 6;

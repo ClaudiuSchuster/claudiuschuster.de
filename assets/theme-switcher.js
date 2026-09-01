@@ -41,6 +41,37 @@
 })();
 
 (() => {
+  const cards = document.querySelectorAll('.project-card[data-preview-src]');
+
+  cards.forEach((card) => {
+    const source = card.dataset.previewSrc;
+    if (!source) return;
+
+    function activatePreview() {
+      card.style.setProperty('--project-preview-url', `url(${source})`);
+      card.classList.add('is-preview-active');
+    }
+
+    function deactivatePreview() {
+      card.classList.remove('is-preview-active');
+    }
+
+    card.addEventListener('pointerenter', (event) => {
+      if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
+        activatePreview();
+      }
+    });
+    card.addEventListener('pointerleave', deactivatePreview);
+    card.addEventListener('focusin', activatePreview);
+    card.addEventListener('focusout', (event) => {
+      if (!event.relatedTarget || !card.contains(event.relatedTarget)) {
+        deactivatePreview();
+      }
+    });
+  });
+})();
+
+(() => {
   const root = document.documentElement;
   const stylesheet = document.querySelector('#world-theme');
   const controls = document.querySelectorAll('[data-world-target]');
