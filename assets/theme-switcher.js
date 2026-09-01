@@ -140,6 +140,13 @@
     return headerHeight + Math.max(0, window.innerHeight - headerHeight) * 0.4;
   }
 
+  function jumpTo(scrollY) {
+    const previousBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo(0, scrollY);
+    document.documentElement.style.scrollBehavior = previousBehavior;
+  }
+
   function documentTop(element) {
     return element.getBoundingClientRect().top + window.scrollY;
   }
@@ -227,7 +234,7 @@
       maxScroll,
       Math.max(0, targetFocusLine - targetFocusOffset),
     );
-    window.scrollTo(0, targetY);
+    jumpTo(targetY);
   }
 
   function waitForFrames(count) {
@@ -314,6 +321,13 @@
     return headerHeight + Math.max(0, window.innerHeight - headerHeight) * 0.4;
   }
 
+  function jumpTo(scrollY) {
+    const previousBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo(0, scrollY);
+    document.documentElement.style.scrollBehavior = previousBehavior;
+  }
+
   function currentPosition() {
     const sections = Array.from(document.querySelectorAll(sectionSelector));
     if (!sections.length) return null;
@@ -326,9 +340,11 @@
       current = section;
     }
 
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
     return {
       section: sectionName(current),
       offset: Math.max(0, focusLine - sectionTop(current)),
+      atEnd: maxScroll - Math.max(0, window.scrollY) <= 8,
     };
   }
 
@@ -375,9 +391,10 @@
     if (saved.targetPath !== window.location.pathname) return;
 
     const offset = Number(saved.offset);
+    const atEnd = saved.atEnd === true;
     const targetSection = Array.from(document.querySelectorAll(sectionSelector))
       .find((section) => sectionName(section) === saved.section);
-    if (!targetSection || !Number.isFinite(offset) || offset < 0) {
+    if ((!atEnd && !targetSection) || (!atEnd && (!Number.isFinite(offset) || offset < 0))) {
       try {
         sessionStorage.removeItem(storageKey);
       } catch (_) {
@@ -395,13 +412,18 @@
 
     const restore = () => {
       const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-      const targetY = Math.min(
-        Math.max(0, sectionTop(targetSection) + offset - viewportFocusOffset()),
-        maxScroll,
-      );
-      window.scrollTo(0, targetY);
+      const targetY = atEnd
+        ? maxScroll
+        : Math.min(
+          Math.max(0, sectionTop(targetSection) + offset - viewportFocusOffset()),
+          maxScroll,
+        );
+      jumpTo(targetY);
     };
-    window.requestAnimationFrame(() => window.requestAnimationFrame(restore));
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+      restore();
+      window.setTimeout(restore, 240);
+    }));
   }
 
   languageLinks.forEach((link) => link.addEventListener('click', savePosition));
