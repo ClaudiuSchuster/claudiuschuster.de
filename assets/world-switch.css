@@ -152,6 +152,10 @@ html.world-switching .world-flare {
   animation: world-flare 620ms cubic-bezier(0.7, 0, 0.3, 1);
 }
 
+html.world-switching {
+  overflow-anchor: none;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
