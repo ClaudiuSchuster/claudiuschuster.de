@@ -149,6 +149,123 @@
 })();
 
 (() => {
+  const languageLinks = document.querySelectorAll('.language-link');
+  if (!languageLinks.length) return;
+
+  const storageKey = 'claudiuschuster-language-scroll-position';
+  const sectionSelector = 'main > section';
+  let restoreScheduled = false;
+
+  function sectionName(section) {
+    return section.id || 'hero';
+  }
+
+  function sectionTop(section) {
+    return section.getBoundingClientRect().top + window.scrollY;
+  }
+
+  function viewportFocusOffset() {
+    const header = document.querySelector('.site-header');
+    const headerHeight = header?.offsetHeight || 0;
+    return headerHeight + Math.max(0, window.innerHeight - headerHeight) * 0.4;
+  }
+
+  function currentPosition() {
+    const sections = Array.from(document.querySelectorAll(sectionSelector));
+    if (!sections.length) return null;
+
+    const focusOffset = viewportFocusOffset();
+    const focusLine = window.scrollY + focusOffset;
+    let current = sections[0];
+    for (const section of sections) {
+      if (sectionTop(section) > focusLine) break;
+      current = section;
+    }
+
+    return {
+      section: sectionName(current),
+      offset: Math.max(0, focusLine - sectionTop(current)),
+    };
+  }
+
+  function savePosition(event) {
+    if (event.defaultPrevented
+      || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    const position = currentPosition();
+    if (!position) return;
+
+    try {
+      const targetPath = new URL(event.currentTarget.href, document.baseURI).pathname;
+      sessionStorage.setItem(storageKey, JSON.stringify({
+        targetPath,
+        ...position,
+        savedAt: Date.now(),
+      }));
+    } catch (_) {
+      // The language switch still works when session storage is unavailable.
+    }
+  }
+
+  function restorePosition() {
+    if (restoreScheduled) return;
+
+    let saved;
+    try {
+      const raw = sessionStorage.getItem(storageKey);
+      if (!raw) return;
+      saved = JSON.parse(raw);
+      if (!saved.savedAt || Date.now() - saved.savedAt > 30000) {
+        sessionStorage.removeItem(storageKey);
+        return;
+      }
+    } catch (_) {
+      try {
+        sessionStorage.removeItem(storageKey);
+      } catch (__) {
+        // Ignore storage failures and keep the normal page load intact.
+      }
+      return;
+    }
+
+    if (saved.targetPath !== window.location.pathname) return;
+
+    const offset = Number(saved.offset);
+    const targetSection = Array.from(document.querySelectorAll(sectionSelector))
+      .find((section) => sectionName(section) === saved.section);
+    if (!targetSection || !Number.isFinite(offset) || offset < 0) {
+      try {
+        sessionStorage.removeItem(storageKey);
+      } catch (_) {
+        // Ignore storage failures and keep the normal page load intact.
+      }
+      return;
+    }
+
+    restoreScheduled = true;
+    try {
+      sessionStorage.removeItem(storageKey);
+    } catch (_) {
+      // The position has already been validated; continue without storage.
+    }
+
+    const restore = () => {
+      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      const targetY = Math.min(
+        Math.max(0, sectionTop(targetSection) + offset - viewportFocusOffset()),
+        maxScroll,
+      );
+      window.scrollTo(0, targetY);
+    };
+    window.requestAnimationFrame(() => window.requestAnimationFrame(restore));
+  }
+
+  languageLinks.forEach((link) => link.addEventListener('click', savePosition));
+  window.addEventListener('pageshow', restorePosition, { once: true });
+  if (document.readyState === 'complete') restorePosition();
+})();
+
+(() => {
   const root = document.documentElement;
   const canvas = document.querySelector('.flow-canvas');
   if (!canvas) return;

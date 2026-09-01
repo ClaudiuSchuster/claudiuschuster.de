@@ -107,7 +107,7 @@ def main() -> int:
         "assets/favicon.svg": f"assets/{favicon_name}",
     }
 
-    for page_name in ("index.html", "en.html", "legal.html"):
+    for page_name in ("de.html", "en.html", "legal.html"):
         page = (ROOT / page_name).read_text(encoding="utf-8")
         for old, new in replacements.items():
             page = require_replacement(page, old, new, page_name)

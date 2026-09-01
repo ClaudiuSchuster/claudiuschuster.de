@@ -82,7 +82,7 @@ def check_html(path: Path) -> list[str]:
             if href and not parsed.scheme and not href.startswith(("#", "mailto:", "tel:")):
                 target = (path.parent / parsed.path).resolve()
                 if parsed.path.endswith("/"):
-                    target /= "index.html"
+                    target /= "de.html"
                 if not target.exists():
                     errors.append(f"missing local link target: {href}")
         if tag == "link" and attrs.get("rel") == "stylesheet":
@@ -196,19 +196,36 @@ def check_favicon() -> list[str]:
     return errors
 
 
+def check_htaccess() -> list[str]:
+    text = HTACCESS.read_text(encoding="utf-8")
+    errors: list[str] = []
+    required = (
+        "DirectoryIndex de.html",
+        "RewriteCond %{THE_REQUEST} \\s/+index\\.html(?:[?\\s]) [NC]",
+        "RewriteRule ^index\\.html$ / [R=301,L]",
+        "RewriteCond %{THE_REQUEST} \\s/+de\\.html(?:[?\\s]) [NC]",
+        "RewriteRule ^de\\.html$ / [R=301,L]",
+    )
+    for directive in required:
+        if directive not in text:
+            errors.append(f".htaccess is missing: {directive}")
+    return errors
+
+
 def main() -> int:
     failures: list[str] = []
     if len(HTML_FILES) != 3:
         failures.append(f"expected 3 HTML files, found {len(HTML_FILES)}")
     for path in HTML_FILES:
         failures.extend(f"{path.relative_to(ROOT)}: {error}" for error in check_html(path))
-    for path in (ROOT / "index.html", ROOT / "en.html"):
+    for path in (ROOT / "de.html", ROOT / "en.html"):
         failures.extend(f"{path.relative_to(ROOT)}: {error}" for error in check_social_metadata(path))
         failures.extend(f"{path.relative_to(ROOT)}: {error}" for error in check_contact_links(path))
     for path in CSS_FILES:
         failures.extend(f"{path.relative_to(ROOT)}: {error}" for error in check_css(path))
     failures.extend(check_social_preview())
     failures.extend(check_favicon())
+    failures.extend(check_htaccess())
 
     if failures:
         print("Static site checks failed:")
