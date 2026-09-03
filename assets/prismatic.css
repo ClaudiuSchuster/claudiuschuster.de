@@ -74,7 +74,7 @@ body::before {
 }
 
 .hero {
-  grid-template-columns: minmax(0, 0.9fr) minmax(27rem, 1.1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(27rem, 1fr);
   padding-top: 5rem;
 }
 
@@ -98,13 +98,13 @@ body::before {
 
 .hero-copy h1 {
   max-width: 8ch;
-  font-size: clamp(4rem, 9vw, 8rem);
+  font-size: clamp(4rem, 9vw, 7.2rem);
   line-height: 0.82;
 }
 
-@media (min-width: 881px) {
-  html[lang="en"] .hero-copy h1 {
-    font-size: clamp(4rem, 9vw, 7.2rem);
+@media (min-width: 1280px) {
+  html[data-world="prismatic"] .hero-copy {
+    min-height: 40rem;
   }
 }
 
@@ -375,6 +375,16 @@ body::before {
 
 .section-header {
   grid-template-columns: minmax(0, 0.4fr) minmax(0, 1fr);
+}
+
+@media (min-width: 881px) {
+  html[data-world="prismatic"]:not([lang="en"]) #about-title {
+    max-width: 14.5ch;
+  }
+
+  html[data-world="prismatic"] .section-intro {
+    max-width: 52rem;
+  }
 }
 
 .section-kicker {
