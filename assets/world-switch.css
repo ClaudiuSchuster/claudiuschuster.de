@@ -152,7 +152,8 @@ html.world-switching .world-flare {
   animation: world-flare 620ms cubic-bezier(0.7, 0, 0.3, 1);
 }
 
-html.world-switching {
+html.world-switching,
+html.language-switching {
   overflow-anchor: none;
 }
 

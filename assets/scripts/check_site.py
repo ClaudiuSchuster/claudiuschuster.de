@@ -82,7 +82,7 @@ def check_html(path: Path) -> list[str]:
             if href and not parsed.scheme and not href.startswith(("#", "mailto:", "tel:")):
                 target = (path.parent / parsed.path).resolve()
                 if parsed.path.endswith("/"):
-                    target /= "de.html"
+                    target /= "index.html"
                 if not target.exists():
                     errors.append(f"missing local link target: {href}")
         if tag == "link" and attrs.get("rel") == "stylesheet":
@@ -168,6 +168,51 @@ def check_contact_links(path: Path) -> list[str]:
     return errors
 
 
+def check_bilingual_home(path: Path) -> list[str]:
+    parser = PageParser()
+    parser.feed(path.read_text(encoding="utf-8"))
+    errors: list[str] = []
+    html = next((attrs for tag, attrs in parser.tags if tag == "html"), {})
+    if "data-bilingual" not in html:
+        errors.append("homepage must declare data-bilingual")
+
+    language_counts = {"lang-de": 0, "lang-en": 0}
+    for _, attrs in parser.tags:
+        classes = attrs.get("class", "").split()
+        for language_class in language_counts:
+            if language_class in classes:
+                language_counts[language_class] += 1
+    if not language_counts["lang-de"]:
+        errors.append("homepage must contain inline German content")
+    if language_counts["lang-de"] != language_counts["lang-en"]:
+        errors.append(
+            "inline language variants must stay paired: "
+            f"de={language_counts['lang-de']} en={language_counts['lang-en']}"
+        )
+
+    toggles = [
+        attrs
+        for tag, attrs in parser.tags
+        if tag == "button" and "data-language-toggle" in attrs
+    ]
+    if len(toggles) != 1:
+        errors.append(f"expected one in-document language toggle, found {len(toggles)}")
+
+    canonical_urls = [
+        attrs.get("href", "")
+        for tag, attrs in parser.tags
+        if tag == "link" and attrs.get("rel") == "canonical"
+    ]
+    if canonical_urls != ["https://claudiuschuster.de/"]:
+        errors.append("homepage canonical must be the single root URL")
+    if any(
+        tag == "link" and attrs.get("rel") == "alternate" and attrs.get("hreflang")
+        for tag, attrs in parser.tags
+    ):
+        errors.append("single-URL language switching must not advertise alternate URLs")
+    return errors
+
+
 def check_social_preview() -> list[str]:
     data = SOCIAL_PREVIEW.read_bytes()
     if data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR":
@@ -200,11 +245,13 @@ def check_htaccess() -> list[str]:
     text = HTACCESS.read_text(encoding="utf-8")
     errors: list[str] = []
     required = (
-        "DirectoryIndex de.html",
+        "DirectoryIndex index.html",
         "RewriteCond %{THE_REQUEST} \\s/+index\\.html(?:[?\\s]) [NC]",
         "RewriteRule ^index\\.html$ / [R=301,L]",
         "RewriteCond %{THE_REQUEST} \\s/+de\\.html(?:[?\\s]) [NC]",
         "RewriteRule ^de\\.html$ / [R=301,L]",
+        "RewriteCond %{THE_REQUEST} \\s/+en\\.html(?:[?\\s]) [NC]",
+        "RewriteRule ^en\\.html$ /?lang=en [R=301,L,NE]",
     )
     for directive in required:
         if directive not in text:
@@ -214,13 +261,14 @@ def check_htaccess() -> list[str]:
 
 def main() -> int:
     failures: list[str] = []
-    if len(HTML_FILES) != 3:
-        failures.append(f"expected 3 HTML files, found {len(HTML_FILES)}")
+    if len(HTML_FILES) != 2:
+        failures.append(f"expected 2 HTML files, found {len(HTML_FILES)}")
     for path in HTML_FILES:
         failures.extend(f"{path.relative_to(ROOT)}: {error}" for error in check_html(path))
-    for path in (ROOT / "de.html", ROOT / "en.html"):
-        failures.extend(f"{path.relative_to(ROOT)}: {error}" for error in check_social_metadata(path))
-        failures.extend(f"{path.relative_to(ROOT)}: {error}" for error in check_contact_links(path))
+    homepage = ROOT / "index.html"
+    failures.extend(f"{homepage.relative_to(ROOT)}: {error}" for error in check_social_metadata(homepage))
+    failures.extend(f"{homepage.relative_to(ROOT)}: {error}" for error in check_contact_links(homepage))
+    failures.extend(f"{homepage.relative_to(ROOT)}: {error}" for error in check_bilingual_home(homepage))
     for path in CSS_FILES:
         failures.extend(f"{path.relative_to(ROOT)}: {error}" for error in check_css(path))
     failures.extend(check_social_preview())
