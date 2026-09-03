@@ -130,6 +130,9 @@ def main() -> int:
     )
     switcher_name = write_asset("theme-switcher", "js", switcher_text.encode("utf-8"))
 
+    edge_transition_text = source_bytes("assets/profile-edge-transition.js")
+    edge_transition_name = write_asset("profile-edge-transition", "js", edge_transition_text)
+
     replacements = {
         "assets/base.css": f"assets/{base_name}",
         "assets/world-switch.css": f"assets/{switch_name}",
@@ -148,6 +151,13 @@ def main() -> int:
         page = (ROOT / page_name).read_text(encoding="utf-8")
         for old, new in replacements.items():
             page = require_replacement(page, old, new, page_name)
+        if page_name in {"de.html", "en.html"}:
+            page = require_replacement(
+                page,
+                "assets/profile-edge-transition.js",
+                f"assets/{edge_transition_name}",
+                page_name,
+            )
         for old, new in preview_replacements.items():
             if old in page:
                 page = page.replace(old, new)
@@ -174,6 +184,7 @@ def main() -> int:
         favicon_name,
         boot_name,
         switcher_name,
+        edge_transition_name,
         *project_preview_names.values(),
     }
     actual_assets = {path.name for path in DIST_ASSETS.iterdir()}
