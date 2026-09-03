@@ -58,12 +58,14 @@ body::before {
 }
 
 .nav-links a,
-.nav-actions a {
+.nav-actions a,
+.nav-actions button {
   color: var(--muted);
 }
 
 .nav-links a:hover,
-.nav-actions a:hover {
+.nav-actions a:hover,
+.nav-actions button:hover {
   color: var(--text);
 }
 

@@ -147,11 +147,11 @@ def main() -> int:
         url: name for url, name in project_preview_names.items()
     }
 
-    for page_name in ("de.html", "en.html", "legal.html"):
+    for page_name in ("index.html", "legal.html"):
         page = (ROOT / page_name).read_text(encoding="utf-8")
         for old, new in replacements.items():
             page = require_replacement(page, old, new, page_name)
-        if page_name in {"de.html", "en.html"}:
+        if page_name == "index.html":
             page = require_replacement(
                 page,
                 "assets/profile-edge-transition.js",
@@ -161,7 +161,7 @@ def main() -> int:
         for old, new in preview_replacements.items():
             if old in page:
                 page = page.replace(old, new)
-        if page_name in {"de.html", "en.html"}:
+        if page_name == "index.html":
             for source_url in preview_replacements:
                 if source_url in page:
                     raise ValueError(f"remote project preview survived in {page_name}: {source_url}")

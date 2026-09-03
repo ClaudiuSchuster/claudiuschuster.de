@@ -1,4 +1,4 @@
-DirectoryIndex de.html
+DirectoryIndex index.html
 Options -Indexes
 
 <IfModule mod_rewrite.c>
@@ -14,6 +14,8 @@ Options -Indexes
   RewriteRule ^index\.html$ / [R=301,L]
   RewriteCond %{THE_REQUEST} \s/+de\.html(?:[?\s]) [NC]
   RewriteRule ^de\.html$ / [R=301,L]
+  RewriteCond %{THE_REQUEST} \s/+en\.html(?:[?\s]) [NC]
+  RewriteRule ^en\.html$ /?lang=en [R=301,L,NE]
 </IfModule>
 
 <IfModule mod_headers.c>
