@@ -593,14 +593,22 @@ html[lang="en"] .lang-en {
 }
 
 .legal-main {
-  min-height: calc(100vh - 10rem);
-  padding-block: clamp(4rem, 9vw, 8rem);
+  flex: 1;
+  min-height: 0;
+  padding-block: clamp(2.5rem, 5vw, 5rem);
+}
+
+body.legal-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-height: 100vh;
 }
 
 .legal-heading {
   max-width: 9ch;
   margin: 0;
-  font-size: clamp(4rem, 10vw, 8rem);
+  font-size: clamp(3.5rem, 7.5vw, 5.5rem);
   letter-spacing: -0.07em;
   line-height: 0.88;
 }
@@ -648,6 +656,61 @@ html[lang="en"] .lang-en {
 
 .legal-back {
   margin-top: 2.5rem;
+}
+
+@media (max-height: 820px) and (min-width: 881px) {
+  body.legal-page .legal-main {
+    padding-block: 2rem;
+  }
+
+  body.legal-page .legal-intro {
+    margin: 1rem 0 1.5rem;
+  }
+
+  body.legal-page .legal-back {
+    margin-top: 1.5rem;
+  }
+
+  body.legal-page .site-footer {
+    padding-block: 1.5rem;
+  }
+}
+
+@media (max-height: 680px) and (min-width: 881px) {
+  body.legal-page {
+    height: auto;
+  }
+
+  body.legal-page .legal-main {
+    min-height: min-content;
+    padding-block: 0.5rem;
+  }
+
+  body.legal-page .legal-heading {
+    font-size: clamp(3rem, 6vw, 4rem);
+  }
+
+  body.legal-page .legal-intro {
+    margin: 0.75rem 0 1rem;
+  }
+
+  body.legal-page .legal-back {
+    margin-top: 1rem;
+  }
+
+  body.legal-page .site-footer {
+    padding-block: 1rem;
+  }
+}
+
+@media (max-width: 880px) {
+  body.legal-page {
+    height: auto;
+  }
+
+  body.legal-page .legal-main {
+    min-height: min-content;
+  }
 }
 
 @media (max-width: 880px) {
