@@ -28,6 +28,18 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+.lang-en {
+  display: none;
+}
+
+html[lang="en"] .lang-de {
+  display: none;
+}
+
+html[lang="en"] .lang-en {
+  display: revert;
+}
+
 :focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 4px;
@@ -128,20 +140,29 @@ a {
 }
 
 .nav-links a,
-.nav-actions a {
+.nav-actions a,
+.nav-actions button {
   font-size: 0.84rem;
   font-weight: 700;
   text-decoration: none;
 }
 
 .language-link {
-  display: inline-flex;
+  display: none;
   min-height: 2.4rem;
   align-items: center;
   justify-content: center;
   padding-inline: 0.85rem;
   border: 1px solid var(--line);
   border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+.js .language-link {
+  display: inline-flex;
 }
 
 .eyebrow {

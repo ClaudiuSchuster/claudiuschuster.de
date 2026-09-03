@@ -77,8 +77,11 @@
   const controls = document.querySelectorAll('[data-world-target]');
   const liveRegion = document.querySelector('#world-status');
   const description = document.querySelector('meta[name="description"]');
+  const openGraphDescription = document.querySelector('meta[property="og:description"]');
+  const openGraphLocale = document.querySelector('meta[property="og:locale"]');
+  const openGraphAlternateLocale = document.querySelector('meta[property="og:locale:alternate"]');
+  const twitterDescription = document.querySelector('meta[name="twitter:description"]');
   const themeColor = document.querySelector('#theme-color');
-  const locale = root.lang === 'en' ? 'en' : 'de';
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const storageKey = 'claudiuschuster-design-world';
   const scrollAnchorSelectors = [
@@ -111,6 +114,10 @@
         de: 'Claudiu Schuster verbindet Cloud, Automation und Open Source mit technischer Tiefe und menschlicher Neugier.',
         en: 'Claudiu Schuster connects cloud, automation and open source with technical depth and human curiosity.',
       },
+      socialDescription: {
+        de: 'Cloud, Automation und Open Source — technische Tiefe mit menschlicher Neugier.',
+        en: 'Cloud, automation and open source — technical depth with human curiosity.',
+      },
       status: { de: 'Data Flow Atelier aktiv.', en: 'Data Flow Atelier active.' },
       themeColor: '#090711',
     },
@@ -121,20 +128,36 @@
         de: 'Claudiu Schuster macht aus technischer Neugier robuste Cloud-, Automation- und Open-Source-Systeme.',
         en: 'Claudiu Schuster turns technical curiosity into robust cloud, automation and open-source systems.',
       },
+      socialDescription: {
+        de: 'Cloud, Automation und Open Source — technische Tiefe mit menschlicher Neugier.',
+        en: 'Cloud, automation and open source — technical depth with human curiosity.',
+      },
       status: { de: 'Prismatic Workshop aktiv.', en: 'Prismatic Workshop active.' },
       themeColor: '#f3efe6',
     },
   };
 
+  function currentLocale() {
+    return root.lang === 'en' ? 'en' : 'de';
+  }
+
   function worldTitle(world) {
+    const locale = currentLocale();
     return typeof world.title === 'string' ? world.title : world.title[locale];
   }
 
   function updateDocument(worldName, announce = false) {
     const world = worlds[worldName];
+    const locale = currentLocale();
     if (!root.hasAttribute('data-static-meta')) {
       document.title = worldTitle(world);
       if (description) description.content = world.description[locale];
+      if (openGraphDescription) openGraphDescription.content = world.socialDescription[locale];
+      if (twitterDescription) twitterDescription.content = world.socialDescription[locale];
+      if (openGraphLocale) openGraphLocale.content = locale === 'en' ? 'en_US' : 'de_DE';
+      if (openGraphAlternateLocale) {
+        openGraphAlternateLocale.content = locale === 'en' ? 'de_DE' : 'en_US';
+      }
     }
     if (themeColor) themeColor.content = world.themeColor;
     controls.forEach((control) => {
@@ -327,16 +350,23 @@
     control.addEventListener('click', () => activate(control.dataset.worldTarget));
   });
 
+  document.addEventListener('claudiuschuster:languagechange', () => {
+    updateDocument(root.dataset.world || 'atelier');
+  });
+
   updateDocument(root.dataset.world || 'atelier');
 })();
 
 (() => {
-  const languageLinks = document.querySelectorAll('.language-link');
-  if (!languageLinks.length) return;
+  const root = document.documentElement;
+  const toggle = document.querySelector('[data-language-toggle]');
+  if (!toggle) return;
 
-  const storageKey = 'claudiuschuster-language-scroll-position';
+  const liveRegion = document.querySelector('#world-status');
+  const localizedLabels = document.querySelectorAll('[data-label-de][data-label-en]');
+  const storageKey = 'claudiuschuster-language';
   const sectionSelector = 'main > section';
-  let restoreScheduled = false;
+  let switching = false;
 
   function sectionName(section) {
     return section.id || 'hero';
@@ -375,91 +405,78 @@
     return {
       section: sectionName(current),
       offset: Math.max(0, focusLine - sectionTop(current)),
+      atStart: window.scrollY <= 1,
       atEnd: maxScroll - Math.max(0, window.scrollY) <= 8,
     };
   }
 
-  function savePosition(event) {
-    if (event.defaultPrevented
-      || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-
-    const position = currentPosition();
-    if (!position) return;
-
+  function persistLanguage(language) {
     try {
-      const targetPath = new URL(event.currentTarget.href, document.baseURI).pathname;
-      sessionStorage.setItem(storageKey, JSON.stringify({
-        targetPath,
-        ...position,
-        savedAt: Date.now(),
-      }));
+      sessionStorage.setItem(storageKey, language);
     } catch (_) {
       // The language switch still works when session storage is unavailable.
     }
   }
 
-  function restorePosition() {
-    if (restoreScheduled) return;
-
-    let saved;
-    try {
-      const raw = sessionStorage.getItem(storageKey);
-      if (!raw) return;
-      saved = JSON.parse(raw);
-      if (!saved.savedAt || Date.now() - saved.savedAt > 30000) {
-        sessionStorage.removeItem(storageKey);
-        return;
-      }
-    } catch (_) {
-      try {
-        sessionStorage.removeItem(storageKey);
-      } catch (__) {
-        // Ignore storage failures and keep the normal page load intact.
-      }
-      return;
+  function applyLanguage(language, announce = false) {
+    const next = language === 'en' ? 'en' : 'de';
+    root.lang = next;
+    localizedLabels.forEach((element) => {
+      element.setAttribute('aria-label', next === 'en' ? element.dataset.labelEn : element.dataset.labelDe);
+    });
+    persistLanguage(next);
+    document.dispatchEvent(new CustomEvent('claudiuschuster:languagechange', {
+      detail: { language: next },
+    }));
+    if (announce && liveRegion) {
+      liveRegion.textContent = next === 'en' ? 'English selected.' : 'Deutsch ausgewählt.';
     }
+  }
 
-    if (saved.targetPath !== window.location.pathname) return;
+  function restorePosition(saved) {
+    if (!saved) return;
 
     const offset = Number(saved.offset);
-    const atEnd = saved.atEnd === true;
     const targetSection = Array.from(document.querySelectorAll(sectionSelector))
       .find((section) => sectionName(section) === saved.section);
-    if ((!atEnd && !targetSection) || (!atEnd && (!Number.isFinite(offset) || offset < 0))) {
-      try {
-        sessionStorage.removeItem(storageKey);
-      } catch (_) {
-        // Ignore storage failures and keep the normal page load intact.
-      }
+    if (saved.atStart) {
+      jumpTo(0);
+      return;
+    }
+    if (!saved.atEnd && (!targetSection || !Number.isFinite(offset) || offset < 0)) {
       return;
     }
 
-    restoreScheduled = true;
-    try {
-      sessionStorage.removeItem(storageKey);
-    } catch (_) {
-      // The position has already been validated; continue without storage.
-    }
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    const targetY = saved.atEnd
+      ? maxScroll
+      : Math.min(
+        Math.max(0, sectionTop(targetSection) + offset - viewportFocusOffset()),
+        maxScroll,
+      );
+    jumpTo(targetY);
+  }
 
-    const restore = () => {
-      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-      const targetY = atEnd
-        ? maxScroll
-        : Math.min(
-          Math.max(0, sectionTop(targetSection) + offset - viewportFocusOffset()),
-          maxScroll,
-        );
-      jumpTo(targetY);
-    };
+  function switchLanguage() {
+    if (switching) return;
+    const position = currentPosition();
+    const next = root.lang === 'en' ? 'de' : 'en';
+    switching = true;
+    root.classList.add('language-switching');
+    applyLanguage(next, true);
+
     window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
-      restore();
-      window.setTimeout(restore, 240);
+      restorePosition(position);
+      window.setTimeout(() => {
+        restorePosition(position);
+        root.classList.remove('language-switching');
+        switching = false;
+      }, 240);
     }));
   }
 
-  languageLinks.forEach((link) => link.addEventListener('click', savePosition));
-  window.addEventListener('pageshow', restorePosition, { once: true });
-  if (document.readyState === 'complete') restorePosition();
+  toggle.addEventListener('click', switchLanguage);
+  applyLanguage(root.lang);
 })();
 
 (() => {
