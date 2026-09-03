@@ -496,10 +496,13 @@
   const lineColorVariant = ['ink', 'rainbow', 'frame'].includes(requestedLineColor)
     ? requestedLineColor
     : 'frame';
+  const shapeSpectrumShadow = document.createElement('div');
   const shapeSpectrum = document.createElement('div');
   const shapeStripes = document.createElement('div');
+  shapeSpectrumShadow.className = 'flow-shape flow-shape-spectrum-shadow';
   shapeSpectrum.className = 'flow-shape flow-shape-spectrum';
   shapeStripes.className = 'flow-shape flow-shape-stripes';
+  canvas.insertBefore(shapeSpectrumShadow, core);
   canvas.insertBefore(shapeSpectrum, core);
   canvas.insertBefore(shapeStripes, core);
   canvas.classList.add('flow-canvas--interactive');
@@ -904,6 +907,7 @@
       const rotationDrift = variant === 'weave' ? 2.8 : variant === 'orbit' ? 2.2 : 1.3;
       const spectrumRotation = 12 + moving * smoothNoise(907, elapsedSeconds, 8.2) * rotationDrift;
       const stripesRotation = -8 + moving * smoothNoise(953, elapsedSeconds, 8.7) * rotationDrift;
+      placeShape(shapeSpectrumShadow, spectrumX, spectrumY, spectrumRotation, width, height);
       placeShape(shapeSpectrum, spectrumX, spectrumY, spectrumRotation, width, height);
       placeShape(shapeStripes, stripesX, stripesY, stripesRotation, width, height);
 
