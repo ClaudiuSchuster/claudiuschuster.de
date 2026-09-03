@@ -534,7 +534,6 @@
   const startTime = window.performance.now();
   let inView = true;
   let framePending = false;
-  let lastDraw = 0;
 
   function transformState(element) {
     const transform = window.getComputedStyle(element).transform;
@@ -902,8 +901,8 @@
       const drift = variant === 'halo' ? 0.72 : variant === 'weave' ? 1.35 : 1;
       const spectrumX = 468 + moving * smoothNoise(701, elapsedSeconds, 6.3) * 10 * drift;
       const spectrumY = 142 + moving * smoothNoise(733, elapsedSeconds, 7.1) * 9 * drift;
-      const stripesX = 112 + moving * smoothNoise(809, elapsedSeconds, 6.8) * 9 * drift;
-      const stripesY = 430 + moving * smoothNoise(853, elapsedSeconds, 7.6) * 11 * drift;
+      const stripesX = 112 + moving * smoothNoise(809, elapsedSeconds, 6.8) * 18 * drift;
+      const stripesY = 430 + moving * smoothNoise(853, elapsedSeconds, 7.6) * 24 * drift;
       const rotationDrift = variant === 'weave' ? 2.8 : variant === 'orbit' ? 2.2 : 1.3;
       const spectrumRotation = 12 + moving * smoothNoise(907, elapsedSeconds, 8.2) * rotationDrift;
       const stripesRotation = -8 + moving * smoothNoise(953, elapsedSeconds, 8.7) * rotationDrift;
@@ -989,11 +988,7 @@
     framePending = true;
     window.requestAnimationFrame((now) => {
       framePending = false;
-      if (now - lastDraw < 30 && !reducedMotion.matches) {
-        scheduleFrame();
-        return;
-      }
-      lastDraw = now;
+      // Keep the pyramid and its separate shadow on the browser frame clock.
       draw(now);
       if (!reducedMotion.matches) scheduleFrame();
     });

@@ -213,7 +213,8 @@ body::before {
 
 .flow-shape-spectrum-shadow {
   z-index: 2;
-  background: var(--line);
+  background: transparent;
+  box-shadow: 0.18rem 0.18rem 0 var(--line);
   animation: prism-pyramid-shadow-wander 96s ease-in-out infinite;
   pointer-events: none;
 }
@@ -579,83 +580,67 @@ body::before {
 @keyframes prism-pyramid-shadow-wander {
   0%,
   100% {
-    margin-left: 0.18rem;
-    margin-top: 0.18rem;
+    box-shadow: 0.18rem 0.18rem 0 var(--line);
   }
 
   6% {
-    margin-left: 0.21rem;
-    margin-top: 0.22rem;
+    box-shadow: 0.21rem 0.22rem 0 var(--line);
   }
 
   12% {
-    margin-left: 0.34rem;
-    margin-top: 0.43rem;
+    box-shadow: 0.34rem 0.43rem 0 var(--line);
   }
 
   18% {
-    margin-left: 0.48rem;
-    margin-top: 0.78rem;
+    box-shadow: 0.48rem 0.78rem 0 var(--line);
   }
 
   24% {
-    margin-left: 0.56rem;
-    margin-top: 0.79rem;
+    box-shadow: 0.56rem 0.79rem 0 var(--line);
   }
 
   30% {
-    margin-left: 0.6rem;
-    margin-top: 0.8rem;
+    box-shadow: 0.6rem 0.8rem 0 var(--line);
   }
 
   36% {
-    margin-left: 0.52rem;
-    margin-top: 0.78rem;
+    box-shadow: 0.52rem 0.78rem 0 var(--line);
   }
 
   42% {
-    margin-left: 0.38rem;
-    margin-top: 0.78rem;
+    box-shadow: 0.38rem 0.78rem 0 var(--line);
   }
 
   48% {
-    margin-left: 0.27rem;
-    margin-top: 0.68rem;
+    box-shadow: 0.27rem 0.68rem 0 var(--line);
   }
 
   54% {
-    margin-left: 0.2rem;
-    margin-top: 0.31rem;
+    box-shadow: 0.2rem 0.31rem 0 var(--line);
   }
 
   60% {
-    margin-left: 0.34rem;
-    margin-top: 0.46rem;
+    box-shadow: 0.34rem 0.46rem 0 var(--line);
   }
 
   66% {
-    margin-left: 0.48rem;
-    margin-top: 0.78rem;
+    box-shadow: 0.48rem 0.78rem 0 var(--line);
   }
 
   72% {
-    margin-left: 0.8rem;
-    margin-top: 0.8rem;
+    box-shadow: 0.8rem 0.8rem 0 var(--line);
   }
 
   78% {
-    margin-left: 0.56rem;
-    margin-top: 0.8rem;
+    box-shadow: 0.56rem 0.8rem 0 var(--line);
   }
 
   84% {
-    margin-left: 0.41rem;
-    margin-top: 0.77rem;
+    box-shadow: 0.41rem 0.77rem 0 var(--line);
   }
 
   90% {
-    margin-left: 0.29rem;
-    margin-top: 0.43rem;
+    box-shadow: 0.29rem 0.43rem 0 var(--line);
   }
 }
 
