@@ -57,6 +57,8 @@ The Open Graph and Twitter metadata reference a dedicated 1200×630 social card 
 
 Only the generated `dist/` bundle is deployed. DNS, mail routing, certificates and `.well-known` content remain outside the replacement scope.
 
+See [`docs/hosting.md`](docs/hosting.md) for the documented Cloudflare edge-cache safety control and its operational boundary.
+
 ## License
 
 The code is available under the [MIT License](LICENSE).
