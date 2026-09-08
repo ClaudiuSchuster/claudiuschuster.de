@@ -38,6 +38,8 @@ ALLOWED_SUFFIXES = {
 }
 SSH_KEY_BEGIN = "-----BEGIN " + "OPENSSH PRIVATE KEY-----"
 SSH_KEY_END = "-----END " + "OPENSSH PRIVATE KEY-----"
+VERIFY_ATTEMPTS = 5
+VERIFY_RETRY_DELAY_SECONDS = 2
 
 
 class ReleaseError(Exception):
@@ -160,6 +162,27 @@ def curl_get(url: str, origin_ip: str | None = None) -> tuple[int, dict[str, str
         return status, parse_headers(headers_path.read_bytes()), body_path.read_bytes()
 
 
+def fetch_expected(
+    url: str,
+    expected: bytes,
+    origin_ip: str | None,
+    status_code: str,
+    body_code: str,
+) -> tuple[int, dict[str, str], bytes, str]:
+    last_status = 0
+    for attempt in range(VERIFY_ATTEMPTS):
+        probe_url = url + "&probe=" + str(attempt)
+        status, headers, body = curl_get(probe_url, origin_ip)
+        last_status = status
+        if status == 200 and body == expected:
+            return status, headers, body, probe_url
+        if attempt + 1 < VERIFY_ATTEMPTS:
+            time.sleep(VERIFY_RETRY_DELAY_SECONDS)
+    if last_status == 200:
+        raise ReleaseError(body_code)
+    raise ReleaseError(f"{status_code}_{last_status}")
+
+
 def verify_root_and_asset(
     files: dict[str, bytes],
     commit: str,
@@ -168,9 +191,9 @@ def verify_root_and_asset(
 ) -> dict:
     nonce = commit[:12] + "-" + str(time.time_ns())
     root_url = f"https://{DOMAIN}/?release={nonce}"
-    status, headers, body = curl_get(root_url)
-    require(status == 200, "edge_root_status_mismatch")
-    require(body == files["index.html"], "edge_root_bytes_mismatch")
+    status, headers, body, _ = fetch_expected(
+        root_url, files["index.html"], None, "edge_root_status_mismatch", "edge_root_bytes_mismatch"
+    )
     require("no-store" in headers.get("cache-control", "").lower(), "http_cache_mismatch")
 
     asset_name = next(
@@ -178,9 +201,10 @@ def verify_root_and_asset(
         next(name for name in sorted(files) if name.endswith(".js")),
     )
     asset_url = f"https://{DOMAIN}/{asset_name}?release={nonce}"
-    asset_status, asset_headers, asset_body = curl_get(asset_url)
-    require(asset_status == 200, "edge_asset_status_mismatch")
-    require(asset_body == files[asset_name], "edge_asset_bytes_mismatch")
+    asset_status, asset_headers, asset_body, asset_url = fetch_expected(
+        asset_url, files[asset_name], None,
+        "edge_asset_status_mismatch", "edge_asset_bytes_mismatch"
+    )
     cache_status = asset_headers.get("cf-cache-status", "").upper()
     require("immutable" in asset_headers.get("cache-control", "").lower(), "http_cache_mismatch")
     if require_cache:
@@ -194,12 +218,14 @@ def verify_root_and_asset(
     require(www_status == 301, "redirect_mismatch")
     require(www_headers.get("location", "").startswith(f"https://{DOMAIN}/"), "redirect_mismatch")
 
-    origin_status, _, origin_body = curl_get(root_url, origin_ip)
-    require(origin_status == 200, "origin_root_status_mismatch")
-    require(origin_body == files["index.html"], "origin_root_bytes_mismatch")
-    origin_asset_status, _, origin_asset_body = curl_get(asset_url, origin_ip)
-    require(origin_asset_status == 200, "origin_asset_status_mismatch")
-    require(origin_asset_body == files[asset_name], "origin_asset_bytes_mismatch")
+    origin_status, _, origin_body, _ = fetch_expected(
+        root_url, files["index.html"], origin_ip,
+        "origin_root_status_mismatch", "origin_root_bytes_mismatch"
+    )
+    origin_asset_status, _, origin_asset_body, _ = fetch_expected(
+        asset_url, files[asset_name], origin_ip,
+        "origin_asset_status_mismatch", "origin_asset_bytes_mismatch"
+    )
     return {
         "root": {"status": status, "bytes": len(body)},
         "asset": {"path": asset_name, "status": asset_status, "bytes": len(asset_body),
