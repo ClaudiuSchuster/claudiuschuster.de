@@ -13,3 +13,14 @@ any(http.response.headers["cf-edge-cache"][*] == "no-cache")
 For matching origin responses it sets Cloudflare-only `no-store`. This prevents a Namecheap/Imunify360 verification response carrying `CF-Edge-Cache: no-cache` from being stored at the edge and served as the website to later visitors. It does not disable or configure Imunify360 at Namecheap; it only protects Cloudflare's cache. Ordinary website responses remain eligible for the normal cache policy.
 
 After creation, only the `claudiuschuster.de` zone cache was purged. Live verification showed the normal page, exact edge/origin content identity, and normal `MISS` to `HIT` caching behavior. Revalidate this guard if Namecheap changes the header name or semantics.
+
+## Static publication boundary
+
+The reviewed main branch can publish only the generated dist/ bundle
+through the dedicated workflow described in
+[release-publication.md](release-publication.md). Its restricted SSH
+endpoint is bound to this addon-domain root and cannot reach the sibling
+BoundInLove or OSS Singularity roots. Cloudflare invalidation is limited to
+this zone. DNS, Microsoft 365 mail records, TLS products, provider
+.well-known material and unrelated hosting configuration remain outside the
+workflow's mutation scope.
