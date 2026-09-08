@@ -23,8 +23,10 @@ completed successfully and never bypasses a present aggregate failure. The
 job uses a protected production-static environment and a non-canceling
 concurrency group.
 
-The remote target is not a shell. A dedicated SSH key accepts only the fixed
-command claudius-profile-release-v1. The installed endpoint:
+The remote target is not a shell. Its maintenance identifier is
+`claudiuschuster_de_target`; it is deliberately domain-derived but is not a
+hostname. A dedicated SSH key accepts only the stable transport command
+`claudiuschuster_de_release_v1`. The installed endpoint:
 
 1. validates the candidate paths, sizes, hashes and pinned .htaccess;
 2. keeps provider-managed .well-known content outside the candidate;
@@ -97,13 +99,15 @@ The same pattern can be prepared for the BoundInLove repository, but it needs
 its own target binding:
 
 - use a separate workflow copy with the BoundInLove repository name and ID;
-- use a separate forced-command SSH key and a separate private control root;
+- use a separate forced-command SSH key, target identifier and private control root;
 - resolve boundinlove.xxx through cPanel inventory instead of assuming the
   main-domain path;
 - use a separate Cloudflare zone token and fixed zone ID;
 - preserve that site's provider-managed .well-known and any approved
   server-configuration overlay;
 - pin the installed endpoint digest in that repository's environment;
+- use a domain-derived target identifier and bootstrap the private target
+  record before the first workflow plan;
 - keep PROFILE_PUBLISH_ENABLED off until plan, live acceptance and rollback
   have all passed.
 

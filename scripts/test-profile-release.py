@@ -14,7 +14,7 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 REMOTE = ROOT / "scripts/profile-release-remote.py"
-COMMAND = "claudius-profile-release-v1"
+COMMAND = "claudiuschuster_de_release_v1"
 
 
 def canonical(value: object) -> bytes:

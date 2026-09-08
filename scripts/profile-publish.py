@@ -20,7 +20,7 @@ import urllib.request
 
 DOMAIN = "claudiuschuster.de"
 ZONE_ID = "0fe141c79198e191adfa47d117817e3c"
-TARGET = "claudius-profile"
+TARGET = "claudiuschuster_de_target"
 MAX_FILE = 4 * 1024 * 1024
 MAX_TOTAL = 12 * 1024 * 1024
 ALLOWED_SUFFIXES = {
@@ -328,7 +328,7 @@ class Remote:
         ]
         for name, value in options.items():
             self.command += ["-o", name + "=" + value]
-        self.command += [origin, "claudius-profile-release-v1"]
+        self.command += [origin, "claudiuschuster_de_release_v1"]
         self.runtime = environ.get("PROFILE_RUNTIME_SHA256", "")
         if self.runtime:
             hex_value(self.runtime, 64, "invalid_runtime_binding")
@@ -439,6 +439,11 @@ def run(mode: str, commit: str, root: Path, environ: dict[str, str]) -> dict:
             purge_cloudflare(environ.get("CF_RELEASE_TOKEN", ""))
             live = verify_root_and_asset(files, commit, origin_ip, require_cache=True)
         except Exception as error:
+            verification_error = (
+                str(error)
+                if isinstance(error, ReleaseError) and str(error)
+                else "publication_verification_failed"
+            )
             try:
                 remote.call({"schema": 1, "operation": "rollback", "identity": identity})
                 purge_cloudflare(environ.get("CF_RELEASE_TOKEN", ""))
@@ -448,11 +453,7 @@ def run(mode: str, commit: str, root: Path, environ: dict[str, str]) -> dict:
                 verify_baseline(baseline_public, origin_ip)
             except Exception:
                 raise ReleaseError("publication_requires_reconciliation") from None
-            raise ReleaseError(
-                "publication_rolled_back"
-                if isinstance(error, ReleaseError)
-                else "publication_rolled_back"
-            ) from None
+            raise ReleaseError("publication_rolled_back_" + verification_error) from None
         result.update(
             {
                 "deployment_identity": identity,
@@ -482,9 +483,19 @@ def cli(argv: list[str]) -> int:
     try:
         result = run(argv[1], argv[3], Path.cwd(), dict(os.environ))
     except ReleaseError as error:
-        result = {"error": str(error), "publication_verified": False}
+        result = {
+            "schema": 1,
+            "target": TARGET,
+            "error": str(error),
+            "publication_verified": False,
+        }
     except (OSError, ValueError, urllib.error.URLError):
-        result = {"error": "publication_failed", "publication_verified": False}
+        result = {
+            "schema": 1,
+            "target": TARGET,
+            "error": "publication_failed",
+            "publication_verified": False,
+        }
     print(json.dumps(result, indent=2, sort_keys=True))
     return 1 if "error" in result else 0
 
