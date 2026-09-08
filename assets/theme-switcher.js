@@ -42,12 +42,29 @@
 
 (() => {
   const cards = document.querySelectorAll('.project-card[data-preview-src]');
+  const preloaders = [];
 
   cards.forEach((card) => {
     const source = card.dataset.previewSrc;
     if (!source) return;
 
+    let previewImage;
+
+    function preloadPreview() {
+      if (previewImage) return;
+      previewImage = new Image();
+      previewImage.decoding = 'async';
+      previewImage.fetchPriority = 'low';
+      const preloadSource = /^(?:[a-z][a-z\d+.-]*:|\/|\.{1,2}\/)/i.test(source) || source.startsWith('assets/')
+        ? source
+        : `assets/${source}`;
+      previewImage.src = new URL(preloadSource, document.baseURI).href;
+    }
+
+    preloaders.push(preloadPreview);
+
     function activatePreview() {
+      preloadPreview();
       card.style.setProperty('--project-preview-url', `url(${source})`);
       card.classList.add('is-preview-active');
     }
@@ -69,6 +86,24 @@
       }
     });
   });
+
+  function preloadProjectPreviews() {
+    preloaders.forEach((preload) => preload());
+  }
+
+  function scheduleProjectPreloads() {
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(preloadProjectPreviews, { timeout: 1500 });
+      return;
+    }
+    window.setTimeout(preloadProjectPreviews, 0);
+  }
+
+  if (document.readyState === 'complete') {
+    scheduleProjectPreloads();
+  } else {
+    window.addEventListener('load', scheduleProjectPreloads, { once: true });
+  }
 })();
 
 (() => {
