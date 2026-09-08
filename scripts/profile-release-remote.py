@@ -345,7 +345,7 @@ def state_report(config, state):
 
 
 def write_stage(stage, root, preserve, files):
-    stage.mkdir(mode=0o755)
+    stage.mkdir(mode=0o750)
     for name in sorted(preserve):
         source = root / name
         if not source.exists():
@@ -355,21 +355,20 @@ def write_stage(stage, root, preserve, files):
             verify_tree_links(source)
             shutil.copytree(source, destination, symlinks=False, copy_function=shutil.copy2)
         else:
-            raw = ensure_regular_file(source)
-            destination.parent.mkdir(mode=0o755, parents=True, exist_ok=True)
-            destination.write_bytes(raw)
-            os.chmod(destination, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
+            ensure_regular_file(source)
+            destination.parent.mkdir(mode=0o750, parents=True, exist_ok=True)
+            shutil.copy2(source, destination)
     for name, raw in files.items():
         destination = stage / name
-        destination.parent.mkdir(mode=0o755, parents=True, exist_ok=True)
+        destination.parent.mkdir(mode=0o750, parents=True, exist_ok=True)
         destination.write_bytes(raw)
-        os.chmod(destination, 0o644)
+        os.chmod(destination, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP)
     for base, directories, regular_files in os.walk(stage, followlinks=False):
         for name in directories:
-            os.chmod(Path(base) / name, 0o755)
+            os.chmod(Path(base) / name, stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP)
         for name in regular_files:
             if Path(base, name).relative_to(stage).as_posix().split("/", 1)[0] not in preserve:
-                os.chmod(Path(base) / name, 0o644)
+                os.chmod(Path(base) / name, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP)
 
 
 def reject_reserved_paths(root, allowed_previous=None):
