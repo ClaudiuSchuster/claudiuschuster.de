@@ -1,4 +1,4 @@
-# Static publication
+# Site release
 
 This repository uses a deliberately small publication path for the personal
 site. It borrows the security boundary from the OSS Singularity release work,
