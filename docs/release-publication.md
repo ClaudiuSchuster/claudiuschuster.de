@@ -30,7 +30,8 @@ hostname. A dedicated SSH key accepts only the stable transport command
 
 1. validates the candidate paths, sizes, hashes and pinned .htaccess;
 2. keeps provider-managed .well-known content outside the candidate;
-3. creates a private backup and an isolated stage tree;
+3. creates a private backup and an isolated stage tree with the validated
+   public-root directory/file modes;
 4. switches the document root by two guarded renames;
 5. retains the preceding tree for rollback;
 6. exposes no arbitrary path, command, SFTP or forwarding operation.
