@@ -16,8 +16,12 @@ exact protected main commit. The workflow has two entry points:
 
 Before the publisher sends bytes, it rechecks all required checks for the exact
 commit: Static site, Analyze (actions), Analyze (javascript-typescript),
-Analyze (python), and CodeQL. The job uses a protected production-static
-environment and a non-canceling concurrency group.
+Analyze (python), and CodeQL. On a post-merge push, GitHub's CodeQL default
+setup may expose the three exact-commit Analyze runs without the PR-only
+`CodeQL` aggregate; the gate accepts that fallback only when all three are
+completed successfully and never bypasses a present aggregate failure. The
+job uses a protected production-static environment and a non-canceling
+concurrency group.
 
 The remote target is not a shell. A dedicated SSH key accepts only the fixed
 command claudius-profile-release-v1. The installed endpoint:

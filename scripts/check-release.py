@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Wait for the required protected-main checks of one exact commit."""
+"""Wait for the required protected-main checks of one exact commit.
+
+GitHub's CodeQL default setup exposes a PR-level ``CodeQL`` aggregate check,
+but a push to ``main`` can expose only its three language-analysis check runs.
+The latter are accepted as the exact-commit CodeQL proof only when all three
+are complete and successful; a present aggregate failure is never bypassed.
+"""
 
 from __future__ import annotations
 
@@ -18,6 +24,7 @@ REQUIRED = (
     "Analyze (python)",
     "CodeQL",
 )
+CODEQL_ANALYSES = REQUIRED[1:4]
 
 
 def api_get(repository: str, sha: str, token: str) -> dict:
@@ -51,17 +58,48 @@ def summarize(value: dict) -> dict:
             current.get("completed_at") or current.get("started_at") or ""
         ):
             latest[name] = item
-    states = {}
+    states: dict[str, dict] = {}
     for name in REQUIRED:
         item = latest.get(name)
         states[name] = (
             {
                 "status": item.get("status"),
                 "conclusion": item.get("conclusion"),
+                "source": "check_run",
             }
             if item
-            else {"status": "missing", "conclusion": None}
+            else {"status": "missing", "conclusion": None, "source": "check_run"}
         )
+
+    if "CodeQL" not in latest:
+        analyses = [states[name] for name in CODEQL_ANALYSES]
+        if all(
+            state["status"] == "completed" and state["conclusion"] == "success"
+            for state in analyses
+        ):
+            states["CodeQL"] = {
+                "status": "completed",
+                "conclusion": "success",
+                "source": "analyze_jobs_fallback",
+            }
+        elif any(state["status"] in {"queued", "in_progress"} for state in analyses):
+            states["CodeQL"] = {
+                "status": "in_progress",
+                "conclusion": None,
+                "source": "analyze_jobs_fallback",
+            }
+        elif any(state["status"] == "missing" for state in analyses):
+            states["CodeQL"] = {
+                "status": "missing",
+                "conclusion": None,
+                "source": "analyze_jobs_fallback",
+            }
+        else:
+            states["CodeQL"] = {
+                "status": "completed",
+                "conclusion": "failure",
+                "source": "analyze_jobs_fallback",
+            }
     return {
         "schema": 1,
         "required": list(REQUIRED),
