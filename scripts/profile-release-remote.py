@@ -18,8 +18,8 @@ import tempfile
 import time
 
 
-COMMAND = "claudius-profile-release-v1"
-TARGET = "claudius-profile"
+COMMAND = "claudiuschuster_de_release_v1"
+TARGET = "claudiuschuster_de_target"
 SCHEMA = 1
 MAX_REQUEST = 16 * 1024 * 1024
 MAX_FILE = 4 * 1024 * 1024
