@@ -169,7 +169,8 @@ def verify_root_and_asset(
     nonce = commit[:12] + "-" + str(time.time_ns())
     root_url = f"https://{DOMAIN}/?release={nonce}"
     status, headers, body = curl_get(root_url)
-    require(status == 200 and body == files["index.html"], "http_bytes_mismatch")
+    require(status == 200, "edge_root_status_mismatch")
+    require(body == files["index.html"], "edge_root_bytes_mismatch")
     require("no-store" in headers.get("cache-control", "").lower(), "http_cache_mismatch")
 
     asset_name = next(
@@ -178,12 +179,14 @@ def verify_root_and_asset(
     )
     asset_url = f"https://{DOMAIN}/{asset_name}?release={nonce}"
     asset_status, asset_headers, asset_body = curl_get(asset_url)
-    require(asset_status == 200 and asset_body == files[asset_name], "http_bytes_mismatch")
+    require(asset_status == 200, "edge_asset_status_mismatch")
+    require(asset_body == files[asset_name], "edge_asset_bytes_mismatch")
     cache_status = asset_headers.get("cf-cache-status", "").upper()
     require("immutable" in asset_headers.get("cache-control", "").lower(), "http_cache_mismatch")
     if require_cache:
         second_status, second_headers, second_body = curl_get(asset_url)
-        require(second_status == 200 and second_body == files[asset_name], "http_bytes_mismatch")
+        require(second_status == 200, "edge_asset_cache_status_mismatch")
+        require(second_body == files[asset_name], "edge_asset_cache_bytes_mismatch")
         require(cache_status == "MISS" and second_headers.get("cf-cache-status", "").upper() == "HIT",
                 "http_cache_mismatch")
 
@@ -192,10 +195,11 @@ def verify_root_and_asset(
     require(www_headers.get("location", "").startswith(f"https://{DOMAIN}/"), "redirect_mismatch")
 
     origin_status, _, origin_body = curl_get(root_url, origin_ip)
-    require(origin_status == 200 and origin_body == files["index.html"], "origin_bytes_mismatch")
+    require(origin_status == 200, "origin_root_status_mismatch")
+    require(origin_body == files["index.html"], "origin_root_bytes_mismatch")
     origin_asset_status, _, origin_asset_body = curl_get(asset_url, origin_ip)
-    require(origin_asset_status == 200 and origin_asset_body == files[asset_name],
-            "origin_bytes_mismatch")
+    require(origin_asset_status == 200, "origin_asset_status_mismatch")
+    require(origin_asset_body == files[asset_name], "origin_asset_bytes_mismatch")
     return {
         "root": {"status": status, "bytes": len(body)},
         "asset": {"path": asset_name, "status": asset_status, "bytes": len(asset_body),
