@@ -43,11 +43,13 @@ hostname. A dedicated SSH key accepts only the stable transport command
 
 After the switch, the client uses a Cloudflare token that can purge only the
 claudiuschuster.de zone and verifies the homepage, a fingerprinted asset, the
-www redirect, the direct origin and the edge MISS-to-HIT transition. The edge
-and origin byte checks allow a bounded convergence window with fresh query
-probes after the atomic switch; a persistent mismatch still causes the same
-attempt identity to be used for one guarded rollback and a second zone-local
-purge.
+www redirect, the direct origin and cache convergence. A fresh key normally
+reports `MISS -> HIT`; if a concurrent retry has already warmed that unique
+key, `HIT -> HIT` is accepted only when both responses still have the exact
+candidate bytes and the second response is a cache hit. The edge and origin
+byte checks allow a bounded convergence window with fresh query probes after
+the atomic switch; a persistent mismatch still causes the same attempt
+identity to be used for one guarded rollback and a second zone-local purge.
 
 The workflow contains no cPanel account token, operator SSH key, GitHub App
 private key or Cloudflare account-wide credential. The OSS Singularity release
