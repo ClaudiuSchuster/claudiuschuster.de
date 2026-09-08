@@ -14,14 +14,19 @@ exact protected main commit. The workflow has two entry points:
   repository variable PROFILE_PUBLISH_ENABLED is true;
 - workflow dispatch supports plan and publish, and is restricted to main.
 
-Before the publisher sends bytes, it rechecks all required checks for the exact
-commit: Static site, Analyze (actions), Analyze (javascript-typescript),
-Analyze (python), and CodeQL. On a post-merge push, GitHub's CodeQL default
-setup may expose the three exact-commit Analyze runs without the PR-only
-`CodeQL` aggregate; the gate accepts that fallback only when all three are
-completed successfully and never bypasses a present aggregate failure. The
-job uses a protected production-static environment and a non-canceling
-concurrency group.
+The automatic `workflow_run` path is admitted only after the exact protected
+main commit's Verify run has completed successfully; the event guard also
+requires the expected repository, branch, event, head SHA and repository ID.
+It therefore does not repeat the same check-run query immediately before the
+publish. A manual `workflow_dispatch` keeps one explicit fail-closed gate via
+`scripts/check-release.py` before either plan or publish. That gate checks
+Static site, Analyze (actions), Analyze (javascript-typescript), Analyze
+(python), and CodeQL for the exact commit. On a post-merge push, GitHub's
+CodeQL default setup may expose the three exact-commit Analyze runs without
+the PR-only `CodeQL` aggregate; the manual gate accepts that fallback only
+when all three are completed successfully and never bypasses a present
+aggregate failure. The job uses a protected production-static environment and
+a non-canceling concurrency group.
 
 The remote target is not a shell. Its maintenance identifier is
 `claudiuschuster_de_target`; it is deliberately domain-derived but is not a
