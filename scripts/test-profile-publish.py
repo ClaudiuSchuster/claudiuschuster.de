@@ -52,6 +52,16 @@ def main() -> int:
     else:
         raise AssertionError("persistent byte mismatch was accepted")
 
+    assert MODULE.cache_transition("MISS", "HIT") == "MISS->HIT"
+    assert MODULE.cache_transition("HIT", "HIT") == "HIT->HIT"
+    for first_status in ("", "BYPASS", "EXPIRED"):
+        try:
+            MODULE.cache_transition(first_status, "HIT")
+        except MODULE.ReleaseError as error:
+            assert str(error) == "http_cache_mismatch"
+        else:
+            raise AssertionError(f"unsupported cache state was accepted: {first_status!r}")
+
     print("profile publish fixture: PASS")
     return 0
 

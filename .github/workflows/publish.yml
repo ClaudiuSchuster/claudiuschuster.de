@@ -81,12 +81,13 @@ jobs:
         run: |
           if [ -s "$RUNNER_TEMP/profile-publication-report.json" ]; then
             {
-              echo "## claudiuschuster.de publication"
+              echo "## [claudiuschuster.de](https://claudiuschuster.de/) publication"
               echo
               echo "Publication result:"
               echo
               python3 - "$RUNNER_TEMP/profile-publication-report.json" <<'PY'
           import json
+          import os
           import sys
 
           try:
@@ -102,11 +103,21 @@ jobs:
                       return str(item).lower()
                   return str(item)
 
+              commit_sha = value("commit")
+              if len(commit_sha) == 40 and all(char in "0123456789abcdef" for char in commit_sha):
+                  commit = (
+                      f"[{commit_sha[:7]}]("
+                      f"{os.environ.get('GITHUB_SERVER_URL', 'https://github.com').rstrip('/')}/"
+                      f"{os.environ['GITHUB_REPOSITORY']}/commit/{commit_sha})"
+                  )
+              else:
+                  commit = f"`{commit_sha}`"
+
               print("| Mode | Verified | Commit | Target | Remote phase |")
               print("| --- | --- | --- | --- | --- |")
               print(
                   f"| `{value('mode')}` | `{value('publication_verified')}` | "
-                  f"`{value('commit')}` | `{value('target')}` | "
+                  f"{commit} | `{value('target')}` | "
                   f"`{value('remote_phase', 'n/a')}` |"
               )
           PY
