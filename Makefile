@@ -5,6 +5,7 @@ build: check
 
 check:
 	python3 assets/scripts/check_site.py
+	python3 scripts/test-check-release.py
 
 render-social-preview:
 	bash assets/scripts/render_social_preview.sh
