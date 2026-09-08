@@ -14,7 +14,7 @@ For matching origin responses it sets Cloudflare-only `no-store`. This prevents 
 
 After creation, only the `claudiuschuster.de` zone cache was purged. Live verification showed the normal page, exact edge/origin content identity, and normal `MISS` to `HIT` caching behavior. Revalidate this guard if Namecheap changes the header name or semantics.
 
-## Static publication boundary
+## Publish boundary
 
 The reviewed main branch can publish only the generated dist/ bundle
 through the dedicated workflow described in

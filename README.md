@@ -57,7 +57,7 @@ The Open Graph and Twitter metadata reference a dedicated 1200×630 social card 
 
 Only the generated `dist/` bundle is deployed. DNS, mail routing, certificates and `.well-known` content remain outside the replacement scope.
 
-See [`docs/hosting.md`](docs/hosting.md) for the documented Cloudflare edge-cache safety control and its operational boundary. The protected static publication path is documented in [docs/release-publication.md](docs/release-publication.md).
+See [`docs/hosting.md`](docs/hosting.md) for the documented Cloudflare edge-cache safety control and its operational boundary. The protected publish path is documented in [docs/release-publication.md](docs/release-publication.md).
 
 ## License
 
