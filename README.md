@@ -1,6 +1,6 @@
 # claudiuschuster.de
 
-[![CodeQL](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/ClaudiuSchuster/claudiuschuster.de/security/code-scanning) • [![Verify](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/verify.yml/badge.svg?branch=main)](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/verify.yml) • [![Publish](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/publish.yml)
+[![CodeQL](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/ClaudiuSchuster/claudiuschuster.de/security/code-scanning) <sup><strong>•</strong></sup> [![Verify](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/verify.yml/badge.svg?branch=main)](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/verify.yml) <sup><strong>•</strong></sup> [![Publish](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/publish.yml)
 
 [![Claudiu Schuster — Feel the data flow ...](assets/social-preview.png)](https://claudiuschuster.de/)
 
