@@ -1,4 +1,4 @@
-name: Static publication
+name: Publish
 
 on:
   workflow_run:
