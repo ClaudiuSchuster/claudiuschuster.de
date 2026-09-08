@@ -183,6 +183,13 @@ def fetch_expected(
     raise ReleaseError(f"{status_code}_{last_status}")
 
 
+def cache_transition(first_status: str, second_status: str) -> str:
+    """Accept a fresh or already-warm unique key, but require a cached second hit."""
+    require(first_status in {"MISS", "HIT"} and second_status == "HIT",
+            "http_cache_mismatch")
+    return f"{first_status}->{second_status}"
+
+
 def verify_root_and_asset(
     files: dict[str, bytes],
     commit: str,
@@ -207,12 +214,14 @@ def verify_root_and_asset(
     )
     cache_status = asset_headers.get("cf-cache-status", "").upper()
     require("immutable" in asset_headers.get("cache-control", "").lower(), "http_cache_mismatch")
+    cache_transition_value = None
     if require_cache:
         second_status, second_headers, second_body = curl_get(asset_url)
         require(second_status == 200, "edge_asset_cache_status_mismatch")
         require(second_body == files[asset_name], "edge_asset_cache_bytes_mismatch")
-        require(cache_status == "MISS" and second_headers.get("cf-cache-status", "").upper() == "HIT",
-                "http_cache_mismatch")
+        cache_transition_value = cache_transition(
+            cache_status, second_headers.get("cf-cache-status", "").upper()
+        )
 
     www_status, www_headers, _ = curl_get(f"https://www.{DOMAIN}/?release={nonce}")
     require(www_status == 301, "redirect_mismatch")
@@ -229,7 +238,7 @@ def verify_root_and_asset(
     return {
         "root": {"status": status, "bytes": len(body)},
         "asset": {"path": asset_name, "status": asset_status, "bytes": len(asset_body),
-                  "cache": cache_status},
+                  "cache": cache_status, "cache_transition": cache_transition_value},
         "origin": {"root_status": origin_status, "asset_status": origin_asset_status},
         "redirect": {"www_status": www_status},
     }
