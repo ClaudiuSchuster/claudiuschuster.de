@@ -345,7 +345,16 @@ def state_report(config, state):
 
 
 def write_stage(stage, root, preserve, files):
-    stage.mkdir(mode=0o750)
+    directory_mode = stat.S_IMODE(root.stat().st_mode)
+    file_mode = stat.S_IMODE((root / ".htaccess").stat().st_mode)
+    require(
+        (directory_mode & (stat.S_IROTH | stat.S_IXOTH))
+        == (stat.S_IROTH | stat.S_IXOTH)
+        and (file_mode & stat.S_IROTH),
+        "unsafe_live",
+    )
+    stage.mkdir(mode=directory_mode)
+    os.chmod(stage, directory_mode)
     for name in sorted(preserve):
         source = root / name
         if not source.exists():
@@ -362,13 +371,12 @@ def write_stage(stage, root, preserve, files):
         destination = stage / name
         destination.parent.mkdir(mode=0o750, parents=True, exist_ok=True)
         destination.write_bytes(raw)
-        os.chmod(destination, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP)
     for base, directories, regular_files in os.walk(stage, followlinks=False):
         for name in directories:
-            os.chmod(Path(base) / name, stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP)
+            os.chmod(Path(base) / name, directory_mode)
         for name in regular_files:
             if Path(base, name).relative_to(stage).as_posix().split("/", 1)[0] not in preserve:
-                os.chmod(Path(base) / name, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP)
+                os.chmod(Path(base) / name, file_mode)
 
 
 def reject_reserved_paths(root, allowed_previous=None):
