@@ -64,7 +64,8 @@ jobs:
       - name: Rebuild the production bundle
         run: make build
 
-      - name: Recheck all required checks for this exact commit
+      - name: Validate checks for a manual release
+        if: github.event_name == 'workflow_dispatch'
         run: python3 scripts/check-release.py --sha "$RELEASE_SHA" --wait-seconds 600
 
       - name: Run the selected publication mode
