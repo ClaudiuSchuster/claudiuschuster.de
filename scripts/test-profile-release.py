@@ -7,6 +7,7 @@ import base64
 import hashlib
 import json
 from pathlib import Path
+import stat
 import subprocess
 import sys
 import tempfile
@@ -76,6 +77,8 @@ def main() -> int:
         (root / "assets" / "style.css").write_text("body{}\n", encoding="utf-8")
         (root / "index.html").write_text("old\n", encoding="utf-8")
         (root / ".htaccess").write_text("DirectoryIndex index.html\n", encoding="utf-8")
+        public_directory_mode = stat.S_IMODE(root.stat().st_mode)
+        public_file_mode = stat.S_IMODE((root / ".htaccess").stat().st_mode)
         legacy = folder / "live.__previous_legacy"
         legacy.mkdir()
         (legacy / "leftover.txt").write_text("untouched\n", encoding="utf-8")
@@ -123,6 +126,8 @@ def main() -> int:
         )
         assert first_result["phase"] == "published"
         assert (root / "index.html").read_bytes() == b"first\n"
+        assert stat.S_IMODE(root.stat().st_mode) == public_directory_mode
+        assert stat.S_IMODE((root / "index.html").stat().st_mode) == public_file_mode
         assert (root / ".well-known" / "ssl-manager" / "installed.txt").exists()
         assert (legacy / "leftover.txt").read_text(encoding="utf-8") == "untouched\n"
 
