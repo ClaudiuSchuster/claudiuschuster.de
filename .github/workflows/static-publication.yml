@@ -1,0 +1,88 @@
+name: Static publication
+
+on:
+  workflow_run:
+    workflows: [Verify]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Verify the current main handoff, or publish it
+        type: choice
+        options: [plan, publish]
+        default: plan
+        required: true
+
+permissions:
+  contents: read
+  actions: read
+  checks: read
+
+concurrency:
+  group: claudiuschuster-production
+  cancel-in-progress: false
+
+jobs:
+  static:
+    if: >-
+      github.server_url == 'https://github.com' &&
+      github.repository == 'ClaudiuSchuster/claudiuschuster.de' &&
+      github.repository_id == '1351331457' &&
+      github.ref == 'refs/heads/main' &&
+      github.ref_protected &&
+      github.sha == github.workflow_sha &&
+      (github.event_name == 'workflow_dispatch' ||
+       (vars.PROFILE_PUBLISH_ENABLED == 'true' &&
+        github.event.workflow_run.name == 'Verify' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch == 'main' &&
+        github.event.workflow_run.head_sha == github.sha &&
+        github.event.workflow_run.head_repository.id == 1351331457))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    environment: production-static
+    env:
+      RELEASE_SHA: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+      RELEASE_MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'publish' }}
+      GH_TOKEN: ${{ github.token }}
+      CF_RELEASE_TOKEN: ${{ secrets.CF_RELEASE_TOKEN }}
+      PROFILE_ORIGIN_IP: ${{ secrets.PROFILE_ORIGIN_IP }}
+      PROFILE_SSH_USER: ${{ secrets.PROFILE_SSH_USER }}
+      PROFILE_SSH_PORT: ${{ vars.PROFILE_SSH_PORT }}
+      PROFILE_SSH_HOST_KEY: ${{ vars.PROFILE_SSH_HOST_KEY }}
+      PROFILE_SSH_KEY: ${{ secrets.PROFILE_SSH_KEY }}
+      PROFILE_RUNTIME_SHA256: ${{ vars.PROFILE_RUNTIME_SHA256 }}
+    steps:
+      - name: Check out the exact protected main commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
+
+      - name: Rebuild the production bundle
+        run: make build
+
+      - name: Recheck all required checks for this exact commit
+        run: python3 scripts/check-release.py --sha "$RELEASE_SHA" --wait-seconds 600
+
+      - name: Run the selected publication mode
+        run: |
+          set -euo pipefail
+          python3 scripts/profile-publish.py \
+            --mode "$RELEASE_MODE" \
+            --commit "$RELEASE_SHA" \
+            | tee "$RUNNER_TEMP/profile-publication-report.json"
+
+      - name: Add the sanitized result to the job summary
+        if: always()
+        run: |
+          if [ -s "$RUNNER_TEMP/profile-publication-report.json" ]; then
+            {
+              echo "## claudiuschuster.de publication"
+              echo
+              echo "Report:"
+              cat "$RUNNER_TEMP/profile-publication-report.json"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
