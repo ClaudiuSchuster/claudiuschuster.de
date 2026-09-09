@@ -38,7 +38,7 @@ def summary(*runs: dict) -> dict:
 
 
 def main() -> int:
-    base = [check_run("Static site"), *(check_run(name) for name in ANALYSES)]
+    base = [check_run("Verify"), *(check_run(name) for name in ANALYSES)]
 
     push = summary(*base)
     assert push["all_success"]
@@ -55,7 +55,7 @@ def main() -> int:
     assert not failed_aggregate["all_success"]
 
     incomplete_push = summary(
-        check_run("Static site"),
+        check_run("Verify"),
         check_run(ANALYSES[0]),
         check_run(ANALYSES[1], status="in_progress", conclusion=None),
         check_run(ANALYSES[2]),

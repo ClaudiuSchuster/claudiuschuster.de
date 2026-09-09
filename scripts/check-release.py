@@ -18,7 +18,7 @@ import urllib.request
 
 
 REQUIRED = (
-    "Static site",
+    "Verify",
     "Analyze (actions)",
     "Analyze (javascript-typescript)",
     "Analyze (python)",
