@@ -6,6 +6,6 @@
 
 A bilingual personal website about cloud, automation, open source and the human systems around them.
 
-[Visit claudiuschuster.de](https://claudiuschuster.de/) · [Open the GitHub Pages mirror](https://claudiuschuster.github.io/claudiuschuster.de/) · [Read the development documentation](docs/README.md)
+[Visit claudiuschuster.de](https://claudiuschuster.de/)&nbsp;&nbsp;<strong>•</strong>&nbsp;&nbsp;[Open the GitHub Pages mirror](https://claudiuschuster.github.io/claudiuschuster.de/)&nbsp;&nbsp;<strong>•</strong>&nbsp;&nbsp;[Read the development documentation](docs/README.md)
 
-Built with love, care and a little magic for making complexity flow.
+Built with love, care and a little magic for making complexity flow. 🫰🌈💎
