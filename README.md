@@ -1,6 +1,6 @@
 # claudiuschuster.de
 
-[![CodeQL](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/ClaudiuSchuster/claudiuschuster.de/security/code-scanning) <sup><strong>•</strong></sup> [![Verify](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/verify.yml/badge.svg?branch=main)](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/verify.yml) <sup><strong>•</strong></sup> [![Publish](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/publish.yml)
+[![CodeQL](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/ClaudiuSchuster/claudiuschuster.de/security/code-scanning) <sup><strong>•</strong></sup> [![Verify](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/verify.yml/badge.svg?branch=main)](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/verify.yml) <sup><strong>•</strong></sup> [![Publish Official](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/publish-official.yml/badge.svg?branch=main)](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/publish-official.yml) <sup><strong>•</strong></sup> [![Publish GitHub](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/publish-github.yml/badge.svg?branch=main)](https://github.com/ClaudiuSchuster/claudiuschuster.de/actions/workflows/publish-github.yml)
 
 [![Claudiu Schuster — Feel the data flow ...](assets/social-preview.png)](https://claudiuschuster.de/)
 
@@ -58,6 +58,11 @@ The Open Graph and Twitter metadata reference a dedicated 1200×630 social card 
 Only the generated `dist/` bundle is deployed. DNS, mail routing, certificates and `.well-known` content remain outside the replacement scope.
 
 See [`docs/hosting.md`](docs/hosting.md) for the documented Cloudflare edge-cache safety control and its operational boundary. The protected publish path is documented in [docs/release-publication.md](docs/release-publication.md).
+
+## Publication targets
+
+- **Publish Official** is the protected Namecheap/Cloudflare publication path for [claudiuschuster.de](https://claudiuschuster.de/).
+- **Publish GitHub** builds the same `dist/` bundle and deploys it as a GitHub Pages artifact. The repository Pages mirror is available at <https://claudiuschuster.github.io/claudiuschuster.de/>; canonical metadata continues to point to the official domain.
 
 ## License
 
