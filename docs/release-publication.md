@@ -106,28 +106,3 @@ re-bootstrap; a normal content release cannot smuggle a server-policy change.
 The automatic path never deploys a branch checkout, unmerged dist/ tree or
 runner-created secret. A lost remote response is unresolved state, not proof
 that no change happened; inspect the original identity before retrying.
-
-## Handoff for the separate site
-
-The same pattern can be prepared for the the separate site repository, but it needs
-its own target binding:
-
-- use a separate workflow copy with the the separate site repository name and ID;
-- use a separate forced-command SSH key, target identifier and private control root;
-- resolve the separate site through cPanel inventory instead of assuming the
-  main-domain path;
-- use a separate Cloudflare zone token and fixed zone ID;
-- preserve that site's provider-managed .well-known and any approved
-  server-configuration overlay;
-- pin the installed endpoint digest in that repository's environment;
-- use a domain-derived target identifier and bootstrap the private target
-  record before the first workflow plan;
-- keep PROFILE_PUBLISH_ENABLED off until plan, live acceptance and rollback
-  have all passed.
-
-For a small static homepage, copy only the workflow, profile-publish client,
-check-release helper, remote endpoint, fixture test and this document.
-Replace the target constants and environment names, not the credentials.
-The larger OSS workflow remains the reference for a site with generated
-artifacts, API compatibility or multiple production stages; it is not a
-requirement for the separate site's static homepage.

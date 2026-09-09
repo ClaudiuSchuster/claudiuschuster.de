@@ -20,7 +20,7 @@ The reviewed main branch can publish only the generated dist/ bundle
 through the dedicated workflow described in
 [release-publication.md](release-publication.md). Its restricted SSH
 endpoint is bound to this addon-domain root and cannot reach the sibling
-the separate site or OSS Singularity roots. Cloudflare invalidation is limited to
-this zone. DNS, Microsoft 365 mail records, TLS products, provider
+site or OSS Singularity roots. Cloudflare invalidation is limited to this
+zone. DNS, Microsoft 365 mail records, TLS products, provider
 .well-known material and unrelated hosting configuration remain outside the
 workflow's mutation scope.
