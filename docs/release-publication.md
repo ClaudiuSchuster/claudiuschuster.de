@@ -8,7 +8,11 @@ policy reader, or large provider-observation suite.
 ## Release boundary
 
 The only automatic production input is the generated dist/ directory from an
-exact protected main commit. The workflow has two entry points:
+exact protected main commit. The official workflow is
+`.github/workflows/publish-official.yml`; the separate GitHub Pages mirror is
+published by `.github/workflows/publish-github.yml`.
+
+The official workflow has two entry points:
 
 - a successful Verify run on main starts an automatic publish when the
   repository variable PROFILE_PUBLISH_ENABLED is true;
