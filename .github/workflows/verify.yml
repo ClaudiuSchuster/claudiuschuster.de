@@ -12,8 +12,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  static-site:
-    name: Static site
+  verify:
+    name: Verify
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
