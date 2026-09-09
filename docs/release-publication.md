@@ -20,7 +20,7 @@ requires the expected repository, branch, event, head SHA and repository ID.
 It therefore does not repeat the same check-run query immediately before the
 publish. A manual `workflow_dispatch` keeps one explicit fail-closed gate via
 `scripts/check-release.py` before either plan or publish. That gate checks
-Static site, Analyze (actions), Analyze (javascript-typescript), Analyze
+Verify, Analyze (actions), Analyze (javascript-typescript), Analyze
 (python), and CodeQL for the exact commit. On a post-merge push, GitHub's
 CodeQL default setup may expose the three exact-commit Analyze runs without
 the PR-only `CodeQL` aggregate; the manual gate accepts that fallback only

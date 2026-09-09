@@ -24,7 +24,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  static:
+  publish:
+    name: Publish
     if: >-
       github.server_url == 'https://github.com' &&
       github.repository == 'ClaudiuSchuster/claudiuschuster.de' &&
