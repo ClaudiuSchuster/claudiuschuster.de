@@ -100,8 +100,7 @@ documented in [release-publication.md](release-publication.md).
 - [Hosting operations](hosting.md): provider boundary, Cloudflare cache safety and hosting invariants.
 - [Site release](release-publication.md): protected release workflow, environment contract and validation sequence.
 
-Add future development or operations notes under `docs/` and link them from
-this entry point so the root README remains a focused showcase.
+Add future development or operations notes under `docs/` and link them from this entry point so the root README remains a focused showcase.
 
 ## License
 
