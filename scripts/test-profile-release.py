@@ -110,6 +110,9 @@ def main() -> int:
             "assets/style.css": b"body{color:red}\n",
             "index.html": b"first\n",
             "legal.html": b"legal\n",
+            "robots.txt": b"User-agent: *\nAllow: /\n",
+            "site.webmanifest": b'{"name":"Claudiu Schuster"}\n',
+            "sitemap.xml": b"<urlset></urlset>\n",
         }
         first_manifest = inventory(first)
         first_result = request(

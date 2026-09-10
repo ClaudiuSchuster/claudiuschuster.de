@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlparse
@@ -18,12 +19,43 @@ FAVICON_ICO = ROOT / "favicon.ico"
 HTACCESS = ROOT / ".htaccess"
 ROBOTS = ROOT / "robots.txt"
 SITEMAP = ROOT / "sitemap.xml"
+MANIFEST = ROOT / "site.webmanifest"
 TELEGRAM_URL = "https://t.me/ClaudiuSchuster"
 SITEMAP_NAMESPACE = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
 SITEMAP_URLS = {
     "https://claudiuschuster.de/",
     "https://claudiuschuster.de/legal.html",
 }
+MANIFEST_VALUES = {
+    "id": "./",
+    "name": "Claudiu Schuster",
+    "short_name": "Claudiu",
+    "description": "Claudiu Schuster verbindet Cloud, Automation und Open Source mit technischer Tiefe und menschlicher Neugier.",
+    "lang": "de",
+    "dir": "ltr",
+    "start_url": "./",
+    "scope": "./",
+    "display": "standalone",
+    "theme_color": "#090711",
+    "background_color": "#090711",
+}
+MANIFEST_ICONS = (
+    {
+        "src": "assets/profile.png",
+        "sizes": "640x640",
+        "type": "image/png",
+    },
+    {
+        "src": "assets/favicon.svg",
+        "sizes": "any",
+        "type": "image/svg+xml",
+    },
+    {
+        "src": "favicon.ico",
+        "sizes": "16x16 32x32 48x48 64x64",
+        "type": "image/x-icon",
+    },
+)
 
 
 class PageParser(HTMLParser):
@@ -66,6 +98,16 @@ def check_html(path: Path) -> list[str]:
         errors.append("missing viewport meta")
     if not any(tag == "meta" and attrs.get("name") == "description" and attrs.get("content") for tag, attrs in tags):
         errors.append("missing meta description")
+    manifests = [
+        attrs for tag, attrs in tags if tag == "link" and attrs.get("rel") == "manifest"
+    ]
+    if path.name == "index.html":
+        if len(manifests) != 1 or manifests[0].get("href") != "site.webmanifest":
+            errors.append("homepage must link exactly one local site.webmanifest")
+        elif not MANIFEST.is_file():
+            errors.append("homepage manifest link points to a missing site.webmanifest")
+    elif manifests:
+        errors.append("only the homepage may link site.webmanifest")
     favicons = [
         attrs for tag, attrs in tags if tag == "link" and attrs.get("rel") == "icon"
     ]
@@ -298,6 +340,9 @@ def check_htaccess() -> list[str]:
         "RewriteRule ^de\\.html$ / [R=301,L]",
         "RewriteCond %{THE_REQUEST} \\s/+en\\.html(?:[?\\s]) [NC]",
         "RewriteRule ^en\\.html$ /?lang=en [R=301,L,NE]",
+        'FilesMatch "^site\\.webmanifest$"',
+        'Header always set Cache-Control "no-store, max-age=0"',
+        "AddType application/manifest+json .webmanifest",
     )
     for directive in required:
         if directive not in text:
@@ -343,6 +388,48 @@ def check_sitemap() -> list[str]:
     return errors
 
 
+def check_manifest() -> list[str]:
+    if not MANIFEST.is_file():
+        return ["missing site.webmanifest"]
+    try:
+        manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        return [f"site.webmanifest is not valid JSON: {error}"]
+    if not isinstance(manifest, dict):
+        return ["site.webmanifest root must be a JSON object"]
+
+    errors: list[str] = []
+    for key, value in MANIFEST_VALUES.items():
+        if manifest.get(key) != value:
+            errors.append(f"site.webmanifest {key} must be {value}")
+    if "serviceworker" in manifest:
+        errors.append("site.webmanifest must not register a service worker")
+    unexpected = set(manifest) - {*MANIFEST_VALUES, "icons"}
+    if unexpected:
+        errors.append(f"site.webmanifest has unexpected keys: {sorted(unexpected)}")
+
+    icons = manifest.get("icons")
+    if not isinstance(icons, list):
+        errors.append("site.webmanifest icons must be a list")
+        return errors
+    if icons != list(MANIFEST_ICONS):
+        errors.append("site.webmanifest icons must use the approved local source assets")
+    for icon in icons:
+        if not isinstance(icon, dict):
+            errors.append("site.webmanifest icon entries must be objects")
+            continue
+        src = icon.get("src")
+        if not isinstance(src, str) or not src:
+            errors.append("site.webmanifest icon src must be a non-empty string")
+            continue
+        parsed = urlparse(src)
+        if parsed.scheme or src.startswith("//"):
+            errors.append(f"site.webmanifest icon must be local: {src}")
+        elif not (ROOT / src).resolve().is_file():
+            errors.append(f"missing manifest icon asset: {src}")
+    return errors
+
+
 def main() -> int:
     failures: list[str] = []
     if len(HTML_FILES) != 2:
@@ -360,6 +447,7 @@ def main() -> int:
     failures.extend(check_htaccess())
     failures.extend(check_robots())
     failures.extend(check_sitemap())
+    failures.extend(check_manifest())
 
     if failures:
         print("Static site checks failed:")

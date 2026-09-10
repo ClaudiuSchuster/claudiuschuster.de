@@ -47,6 +47,12 @@ Options -Indexes
   <FilesMatch "^favicon\.ico$">
     Header always set Cache-Control "public, max-age=86400"
   </FilesMatch>
+
+  <FilesMatch "^site\.webmanifest$">
+    Header always set Cache-Control "no-store, max-age=0"
+    Header always set Pragma "no-cache"
+    Header always set Expires "0"
+  </FilesMatch>
 </IfModule>
 
 <IfModule mod_mime.c>
@@ -55,4 +61,5 @@ Options -Indexes
   AddType image/png .png
   AddType image/svg+xml .svg
   AddType image/x-icon .ico
+  AddType application/manifest+json .webmanifest
 </IfModule>

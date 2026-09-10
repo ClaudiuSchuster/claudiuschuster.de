@@ -1,0 +1,30 @@
+{
+  "id": "./",
+  "name": "Claudiu Schuster",
+  "short_name": "Claudiu",
+  "description": "Claudiu Schuster verbindet Cloud, Automation und Open Source mit technischer Tiefe und menschlicher Neugier.",
+  "lang": "de",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "theme_color": "#090711",
+  "background_color": "#090711",
+  "icons": [
+    {
+      "src": "assets/profile.png",
+      "sizes": "640x640",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "favicon.ico",
+      "sizes": "16x16 32x32 48x48 64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}
