@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import shutil
 import struct
 from pathlib import Path
@@ -172,8 +173,30 @@ def main() -> int:
             raise ValueError(f"query-string cachebuster survived in {page_name}")
         (DIST / page_name).write_text(page, encoding="utf-8")
 
-    shutil.copy2(ROOT / ".htaccess", DIST / ".htaccess")
-    shutil.copy2(ROOT / "favicon.ico", DIST / "favicon.ico")
+    manifest_text = source_bytes("site.webmanifest").decode("utf-8")
+    manifest_text = require_replacement(
+        manifest_text,
+        "assets/profile.png",
+        f"assets/{profile_name}",
+        "site.webmanifest",
+    )
+    manifest_text = require_replacement(
+        manifest_text,
+        "assets/favicon.svg",
+        f"assets/{favicon_name}",
+        "site.webmanifest",
+    )
+    try:
+        manifest = json.loads(manifest_text)
+    except json.JSONDecodeError as error:
+        raise ValueError(f"invalid JSON in site.webmanifest: {error}") from error
+    (DIST / "site.webmanifest").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    for public_file in (".htaccess", "favicon.ico", "robots.txt", "sitemap.xml"):
+        shutil.copy2(ROOT / public_file, DIST / public_file)
 
     for asset in sorted(DIST_ASSETS.iterdir()):
         verify_fingerprint(asset)
