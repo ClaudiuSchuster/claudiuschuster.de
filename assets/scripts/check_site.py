@@ -6,6 +6,7 @@ from __future__ import annotations
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlparse
+from xml.etree import ElementTree
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -15,7 +16,14 @@ SOCIAL_PREVIEW = ROOT / "assets/social-preview.png"
 FAVICON = ROOT / "assets/favicon.svg"
 FAVICON_ICO = ROOT / "favicon.ico"
 HTACCESS = ROOT / ".htaccess"
+ROBOTS = ROOT / "robots.txt"
+SITEMAP = ROOT / "sitemap.xml"
 TELEGRAM_URL = "https://t.me/ClaudiuSchuster"
+SITEMAP_NAMESPACE = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
+SITEMAP_URLS = {
+    "https://claudiuschuster.de/",
+    "https://claudiuschuster.de/legal.html",
+}
 
 
 class PageParser(HTMLParser):
@@ -297,6 +305,44 @@ def check_htaccess() -> list[str]:
     return errors
 
 
+def check_robots() -> list[str]:
+    if not ROBOTS.is_file():
+        return ["missing robots.txt"]
+    lines = {line.strip() for line in ROBOTS.read_text(encoding="utf-8").splitlines()}
+    errors: list[str] = []
+    for required in (
+        "User-agent: *",
+        "Allow: /",
+        "Sitemap: https://claudiuschuster.de/sitemap.xml",
+    ):
+        if required not in lines:
+            errors.append(f"robots.txt is missing: {required}")
+    return errors
+
+
+def check_sitemap() -> list[str]:
+    if not SITEMAP.is_file():
+        return ["missing sitemap.xml"]
+    try:
+        root = ElementTree.fromstring(SITEMAP.read_text(encoding="utf-8"))
+    except (OSError, ElementTree.ParseError) as error:
+        return [f"sitemap.xml is not valid XML: {error}"]
+    if root.tag != f"{SITEMAP_NAMESPACE}urlset":
+        return ["sitemap.xml must use the sitemap urlset root"]
+    urls = [
+        (element.text or "").strip()
+        for element in root.findall(f"{SITEMAP_NAMESPACE}url/{SITEMAP_NAMESPACE}loc")
+    ]
+    errors: list[str] = []
+    if len(urls) != len(set(urls)):
+        errors.append("sitemap.xml must not contain duplicate URLs")
+    if set(urls) != SITEMAP_URLS:
+        errors.append(
+            "sitemap.xml URLs must be exactly the canonical homepage and legal notice"
+        )
+    return errors
+
+
 def main() -> int:
     failures: list[str] = []
     if len(HTML_FILES) != 2:
@@ -312,6 +358,8 @@ def main() -> int:
     failures.extend(check_social_preview())
     failures.extend(check_favicon())
     failures.extend(check_htaccess())
+    failures.extend(check_robots())
+    failures.extend(check_sitemap())
 
     if failures:
         print("Static site checks failed:")

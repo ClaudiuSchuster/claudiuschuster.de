@@ -172,8 +172,8 @@ def main() -> int:
             raise ValueError(f"query-string cachebuster survived in {page_name}")
         (DIST / page_name).write_text(page, encoding="utf-8")
 
-    shutil.copy2(ROOT / ".htaccess", DIST / ".htaccess")
-    shutil.copy2(ROOT / "favicon.ico", DIST / "favicon.ico")
+    for public_file in (".htaccess", "favicon.ico", "robots.txt", "sitemap.xml"):
+        shutil.copy2(ROOT / public_file, DIST / public_file)
 
     for asset in sorted(DIST_ASSETS.iterdir()):
         verify_fingerprint(asset)
