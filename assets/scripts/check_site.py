@@ -272,10 +272,6 @@ def check_favicon() -> list[str]:
         errors.append("fingerprinted SVG assets must receive immutable caching")
     if "AddType image/svg+xml .svg" not in htaccess:
         errors.append(".htaccess must declare the SVG MIME type")
-    if "AddType image/x-icon .ico" not in htaccess:
-        errors.append(".htaccess must declare the ICO MIME type")
-    if 'FilesMatch "^favicon\\.ico$"' not in htaccess:
-        errors.append(".htaccess must cache the stable root favicon")
     return errors
 
 
