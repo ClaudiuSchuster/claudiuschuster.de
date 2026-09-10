@@ -105,6 +105,9 @@ def main() -> int:
         raise ValueError("profile image must be exactly 640x640")
     profile_name = write_asset("profile", "png", profile_data)
     favicon_name = write_asset("favicon", "svg", source_bytes("assets/favicon.svg"))
+    favicon_ico = source_bytes("favicon.ico")
+    if favicon_ico[:4] != b"\x00\x00\x01\x00":
+        raise ValueError("favicon.ico is not a valid ICO file")
 
     boot_text = source_bytes("assets/theme-boot.js").decode("utf-8")
     boot_text = require_replacement(
@@ -170,6 +173,7 @@ def main() -> int:
         (DIST / page_name).write_text(page, encoding="utf-8")
 
     shutil.copy2(ROOT / ".htaccess", DIST / ".htaccess")
+    shutil.copy2(ROOT / "favicon.ico", DIST / "favicon.ico")
 
     for asset in sorted(DIST_ASSETS.iterdir()):
         verify_fingerprint(asset)

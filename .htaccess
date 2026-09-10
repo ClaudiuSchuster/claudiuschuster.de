@@ -43,6 +43,10 @@ Options -Indexes
   <FilesMatch "\.[0-9a-f]{12}\.(?:css|js|png|svg)$">
     Header always set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
+
+  <FilesMatch "^favicon\.ico$">
+    Header always set Cache-Control "public, max-age=86400"
+  </FilesMatch>
 </IfModule>
 
 <IfModule mod_mime.c>
@@ -50,4 +54,5 @@ Options -Indexes
   AddType application/javascript .js
   AddType image/png .png
   AddType image/svg+xml .svg
+  AddType image/x-icon .ico
 </IfModule>
