@@ -112,17 +112,38 @@ def summarize(value: dict) -> dict:
     }
 
 
+def check_state(value: dict) -> tuple[str, list[str]]:
+    """Classify an exact-SHA result without waiting on terminal failures."""
+    if value["all_success"]:
+        return "success", []
+    failed = [
+        name
+        for name, state in value["states"].items()
+        if state["status"] == "completed" and state["conclusion"] != "success"
+    ]
+    if failed:
+        return "failed", failed
+    missing = [
+        name for name, state in value["states"].items() if state["status"] == "missing"
+    ]
+    if missing:
+        return "missing", missing
+    return "waiting", []
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--sha", required=True)
     parser.add_argument("--repository", default=os.environ.get("GITHUB_REPOSITORY", ""))
     parser.add_argument("--wait-seconds", type=int, default=600)
+    parser.add_argument("--missing-grace-seconds", type=int, default=90)
     args = parser.parse_args()
     if (
         len(args.sha) != 40
         or any(char not in "0123456789abcdef" for char in args.sha)
         or not args.repository
         or args.wait_seconds < 0
+        or args.missing_grace_seconds < 0
     ):
         print(json.dumps({"error": "invalid_arguments", "all_success": False}))
         return 2
@@ -131,6 +152,7 @@ def main() -> int:
         print(json.dumps({"error": "missing_github_credential", "all_success": False}))
         return 1
     deadline = time.monotonic() + args.wait_seconds
+    missing_deadline = time.monotonic() + min(args.wait_seconds, args.missing_grace_seconds)
     latest = {"schema": 1, "required": list(REQUIRED), "states": {}, "all_success": False}
     while True:
         try:
@@ -138,9 +160,20 @@ def main() -> int:
         except RuntimeError as error:
             print(json.dumps({"error": str(error), "all_success": False}))
             return 1
-        if latest["all_success"]:
+        state, names = check_state(latest)
+        if state == "success":
             print(json.dumps(latest, indent=2, sort_keys=True))
             return 0
+        if state == "failed":
+            latest["error"] = "required_checks_failed"
+            latest["failed_checks"] = names
+            print(json.dumps(latest, indent=2, sort_keys=True))
+            return 1
+        if state == "missing" and time.monotonic() >= missing_deadline:
+            latest["error"] = "required_checks_missing"
+            latest["missing_checks"] = names
+            print(json.dumps(latest, indent=2, sort_keys=True))
+            return 1
         if time.monotonic() >= deadline:
             latest["error"] = "required_checks_not_green"
             print(json.dumps(latest, indent=2, sort_keys=True))
