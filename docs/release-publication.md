@@ -32,6 +32,13 @@ when all three are completed successfully and never bypasses a present
 aggregate failure. The job uses a protected production-static environment and
 a non-canceling concurrency group.
 
+The manual check gate waits briefly for GitHub's check-run index to catch up,
+then fails closed with the exact missing checks instead of spending the full
+ten-minute window when the target SHA has no Verify/Analyze run. A completed
+failed or cancelled check also fails immediately. Rerun the manual workflow
+only after the exact protected main commit has a fresh successful Verify and
+the required CodeQL evidence.
+
 The remote target is not a shell. Its maintenance identifier is
 `claudiuschuster_de_target`; it is deliberately domain-derived but is not a
 hostname. A dedicated SSH key accepts only the stable transport command

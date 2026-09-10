@@ -13,6 +13,7 @@ HTML_FILES = sorted(ROOT.glob("*.html"))
 CSS_FILES = sorted(ROOT.glob("assets/*.css"))
 SOCIAL_PREVIEW = ROOT / "assets/social-preview.png"
 FAVICON = ROOT / "assets/favicon.svg"
+FAVICON_ICO = ROOT / "favicon.ico"
 HTACCESS = ROOT / ".htaccess"
 TELEGRAM_URL = "https://t.me/ClaudiuSchuster"
 
@@ -57,18 +58,30 @@ def check_html(path: Path) -> list[str]:
         errors.append("missing viewport meta")
     if not any(tag == "meta" and attrs.get("name") == "description" and attrs.get("content") for tag, attrs in tags):
         errors.append("missing meta description")
-    favicon = next(
-        (attrs for tag, attrs in tags if tag == "link" and attrs.get("rel") == "icon"),
-        {},
-    )
-    if not favicon:
+    favicons = [
+        attrs for tag, attrs in tags if tag == "link" and attrs.get("rel") == "icon"
+    ]
+    if not favicons:
         errors.append("missing favicon link")
-    elif favicon.get("type") != "image/svg+xml":
-        errors.append("favicon must declare image/svg+xml")
     else:
-        href = favicon.get("href", "")
-        if not href or not (path.parent / href).resolve().is_file():
-            errors.append(f"missing favicon asset: {href}")
+        if not any(attrs.get("href") == "favicon.ico" for attrs in favicons):
+            errors.append("missing stable root favicon fallback link")
+        if not any(
+            attrs.get("href") == "assets/favicon.svg"
+            and attrs.get("type") == "image/svg+xml"
+            for attrs in favicons
+        ):
+            errors.append("missing SVG favicon link")
+        for favicon in favicons:
+            href = favicon.get("href", "")
+            if href and not (path.parent / href).resolve().is_file():
+                errors.append(f"missing favicon asset: {href}")
+        ico_favicon = next(
+            (attrs for attrs in favicons if attrs.get("href") == "favicon.ico"),
+            {},
+        )
+        if ico_favicon and ico_favicon.get("sizes") != "any":
+            errors.append("root favicon fallback must declare sizes=any")
 
     ids = {attrs.get("id") for _, attrs in tags if attrs.get("id")}
     for tag, attrs in tags:
@@ -233,11 +246,36 @@ def check_favicon() -> list[str]:
         errors.append("assets/favicon.svg must use a square 64x64 viewBox")
     if "<title" not in text:
         errors.append("assets/favicon.svg must have an accessible title")
+    if not FAVICON_ICO.is_file():
+        errors.append("missing stable root favicon.ico")
+    else:
+        ico = FAVICON_ICO.read_bytes()
+        if len(ico) < 6 or ico[:4] != b"\x00\x00\x01\x00":
+            errors.append("favicon.ico is not a valid ICO file")
+        else:
+            count = int.from_bytes(ico[4:6], "little")
+            directory_end = 6 + count * 16
+            if count < 4 or len(ico) < directory_end:
+                errors.append("favicon.ico must contain at least four complete images")
+            else:
+                sizes = {
+                    (ico[offset] or 256, ico[offset + 1] or 256)
+                    for offset in range(6, directory_end, 16)
+                }
+                required_sizes = {(16, 16), (32, 32), (48, 48), (64, 64)}
+                if not required_sizes.issubset(sizes):
+                    errors.append(
+                        "favicon.ico must contain 16x16, 32x32, 48x48 and 64x64 images"
+                    )
     htaccess = HTACCESS.read_text(encoding="utf-8")
     if "(?:css|js|png|svg)" not in htaccess:
         errors.append("fingerprinted SVG assets must receive immutable caching")
     if "AddType image/svg+xml .svg" not in htaccess:
         errors.append(".htaccess must declare the SVG MIME type")
+    if "AddType image/x-icon .ico" not in htaccess:
+        errors.append(".htaccess must declare the ICO MIME type")
+    if 'FilesMatch "^favicon\\.ico$"' not in htaccess:
+        errors.append(".htaccess must cache the stable root favicon")
     return errors
 
 
