@@ -263,7 +263,7 @@
     pendingAnchorTimer = window.setTimeout(() => {
       pendingAnchorKey = null;
       pendingAnchorTimer = 0;
-    }, 1500);
+    }, 5000);
   }
 
   function clearPendingAnchor() {
@@ -288,6 +288,10 @@
       rememberPendingAnchor(anchorKeyFromHash(window.location.hash));
     });
     window.addEventListener('wheel', clearPendingAnchor, { passive: true });
+    window.addEventListener('pointerdown', (event) => {
+      const target = event.target instanceof Element ? event.target.closest('[data-world-target]') : null;
+      if (!target) clearPendingAnchor();
+    }, { passive: true });
     window.addEventListener('touchstart', clearPendingAnchor, { passive: true });
     window.addEventListener('keydown', (event) => {
       const target = event.target instanceof Element ? event.target.closest('[data-world-target]') : null;
