@@ -139,6 +139,14 @@
     ['contact-content', '#contact .contact-card'],
     ['footer', '.site-footer'],
   ];
+  const hashAnchorKeys = new Map([
+    ['about', 'about-start'],
+    ['projects', 'projects-start'],
+    ['capabilities', 'capabilities-start'],
+  ]);
+  const anchorTolerance = 32;
+  let pendingAnchorKey = null;
+  let pendingAnchorTimer = 0;
   let busy = false;
 
   const worlds = {
@@ -236,6 +244,60 @@
     document.documentElement.style.scrollBehavior = previousBehavior;
   }
 
+  function anchorKeyFromHash(hash) {
+    if (!hash) return null;
+    try {
+      return hashAnchorKeys.get(decodeURIComponent(hash.replace(/^#/, ''))) || null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function rememberPendingAnchor(key) {
+    window.clearTimeout(pendingAnchorTimer);
+    pendingAnchorKey = key;
+    if (!key) return;
+    // Keep the intended destination while the browser's native smooth anchor
+    // animation is still running. A later manual scroll is handled by the
+    // input listeners below, while the proximity check covers settled hashes.
+    pendingAnchorTimer = window.setTimeout(() => {
+      pendingAnchorKey = null;
+      pendingAnchorTimer = 0;
+    }, 1500);
+  }
+
+  function clearPendingAnchor() {
+    if (!pendingAnchorKey) return;
+    window.clearTimeout(pendingAnchorTimer);
+    pendingAnchorKey = null;
+    pendingAnchorTimer = 0;
+  }
+
+  function watchAnchorNavigation() {
+    document.addEventListener('click', (event) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const target = event.target instanceof Element ? event.target.closest('a[href]') : null;
+      if (!target || (target.target && target.target !== '_self')) return;
+      const url = new URL(target.href, document.baseURI);
+      if (url.origin !== window.location.origin
+        || url.pathname !== window.location.pathname
+        || url.search !== window.location.search) return;
+      rememberPendingAnchor(anchorKeyFromHash(url.hash));
+    });
+    window.addEventListener('hashchange', () => {
+      rememberPendingAnchor(anchorKeyFromHash(window.location.hash));
+    });
+    window.addEventListener('wheel', clearPendingAnchor, { passive: true });
+    window.addEventListener('touchstart', clearPendingAnchor, { passive: true });
+    window.addEventListener('keydown', (event) => {
+      const target = event.target instanceof Element ? event.target.closest('[data-world-target]') : null;
+      if (target) return;
+      if (['ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'End', 'Home', 'PageDown', 'PageUp', ' '].includes(event.key)) {
+        clearPendingAnchor();
+      }
+    });
+  }
+
   function documentTop(element) {
     return element.getBoundingClientRect().top + window.scrollY;
   }
@@ -260,13 +322,28 @@
     const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
     const scrollY = Math.max(0, window.scrollY);
     const focusOffset = viewportFocusOffset();
+    const anchors = scrollAnchors();
+    const requestedAnchorKey = pendingAnchorKey || anchorKeyFromHash(window.location.hash);
+    const requestedAnchor = anchors.find(({ key }) => key === requestedAnchorKey);
+    const anchorViewportOffset = requestedAnchor ? requestedAnchor.top - scrollY : null;
+    const anchorPosition = requestedAnchor
+      && (pendingAnchorKey || Math.abs(anchorViewportOffset) <= anchorTolerance)
+      ? {
+          key: requestedAnchor.key,
+          viewportOffset: pendingAnchorKey && Math.abs(anchorViewportOffset) > anchorTolerance
+            ? 0
+            : anchorViewportOffset,
+        }
+      : null;
     return {
       atStart: scrollY <= 1,
       atEnd: maxScroll - scrollY <= 8,
       maxScroll,
       focusOffset,
       focusLine: scrollY + focusOffset,
-      anchors: scrollAnchors(),
+      anchors,
+      anchorKey: anchorPosition?.key || null,
+      anchorViewportOffset: anchorPosition?.viewportOffset ?? 0,
     };
   }
 
@@ -304,6 +381,20 @@
 
   function restoreScrollPosition(position) {
     const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    if (position.anchorKey) {
+      const anchor = scrollAnchors().find(({ key }) => key === position.anchorKey);
+      if (anchor) {
+        const viewportOffset = Number.isFinite(position.anchorViewportOffset)
+          ? position.anchorViewportOffset
+          : 0;
+        const targetY = Math.min(
+          maxScroll,
+          Math.max(0, anchor.top - viewportOffset),
+        );
+        jumpTo(targetY);
+        return;
+      }
+    }
     if (position.atStart) {
       window.scrollTo(0, 0);
       return;
@@ -384,6 +475,8 @@
   controls.forEach((control) => {
     control.addEventListener('click', () => activate(control.dataset.worldTarget));
   });
+
+  watchAnchorNavigation();
 
   document.addEventListener('claudiuschuster:languagechange', () => {
     updateDocument(root.dataset.world || 'atelier');
