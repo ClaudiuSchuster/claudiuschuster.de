@@ -818,3 +818,20 @@ body.legal-page {
     transition-duration: 0.01ms;
   }
 }
+
+/* oss-oo laboratory badge in the footer (white wordmark for the dark atelier) */
+.site-footer .lab-badge {
+  display: inline-flex;
+  align-items: center;
+}
+
+.site-footer .lab-badge img {
+  height: 1.35rem;
+  width: auto;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.site-footer .lab-badge:hover img {
+  opacity: 1;
+}

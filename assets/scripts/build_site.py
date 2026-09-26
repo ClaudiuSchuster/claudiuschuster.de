@@ -18,9 +18,9 @@ HASH_LENGTH = 12
 PREVIEW_MAX_BYTES = 5_000_000
 
 PROJECT_PREVIEW_SOURCES = {
-    "https://raw.githubusercontent.com/oss-singularity/proton-drive-linux/main/.github/social-preview.png": "project-preview-1",
-    "https://raw.githubusercontent.com/oss-singularity/cinnamon-chatgpt-usage/main/.github/social-preview.png": "project-preview-2",
-    "https://raw.githubusercontent.com/oss-singularity/cinnamon-system-monitor/main/.github/social-preview.png": "project-preview-3",
+    "https://oss-oo.io/OSS-Singularity/proton-drive-linux/raw/branch/main/.github/social-preview.png": "project-preview-1",
+    "https://oss-oo.io/OSS-Singularity/cinnamon-chatgpt-usage/raw/branch/main/.github/social-preview.png": "project-preview-2",
+    "https://oss-oo.io/OSS-Singularity/cinnamon-system-monitor/raw/branch/main/.github/social-preview.png": "project-preview-3",
     "https://oss-singularity.io/assets/social/oss-singularity-social-preview.png": "project-preview-4",
 }
 

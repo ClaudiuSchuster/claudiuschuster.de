@@ -1,0 +1,40 @@
+# Site verification gate for the laboratory (source of truth).
+# Port of .github/workflows/verify.yml: same checks, dependency-free —
+# no actions/* marketplace pulls, only the pinned job container.
+name: verify
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: oss-oo-public
+    container:
+      image: docker.io/library/alpine:3.20
+    timeout-minutes: 10
+    steps:
+      - name: Install tools
+        run: apk add --no-cache make git nodejs python3
+
+      - name: Checkout
+        run: |
+          git init -q .
+          git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+          git fetch --quiet origin "$GITHUB_SHA"
+          git checkout --quiet "$GITHUB_SHA"
+
+      - name: Build cache-safe production bundle
+        run: make build
+
+      - name: Parse JavaScript
+        run: |
+          node --check assets/theme-boot.js
+          node --check assets/theme-switcher.js
+          node --check dist/assets/theme-boot.*.js
+          node --check dist/assets/theme-switcher.*.js

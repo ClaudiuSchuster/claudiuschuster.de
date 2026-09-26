@@ -841,3 +841,8 @@ body::before {
     border-radius: 0;
   }
 }
+
+/* Dark wordmark for the bright prismatic workshop (laboratory asset repo) */
+.site-footer .lab-badge img {
+  content: url("https://oss-oo.io/OSS-OO/oss-oo/raw/branch/main/menu-logos/oss-oo-logo-horizontal_bright.svg");
+}

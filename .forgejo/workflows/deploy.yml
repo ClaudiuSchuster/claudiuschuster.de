@@ -1,0 +1,94 @@
+# Production publication for claudiuschuster.de from the laboratory.
+# Port of .github/workflows/publish-official.yml onto the same restricted
+# fixed-command SSH target (claudiuschuster_de_target): staged upload, atomic
+# two-rename switch, retained rollback, zone-local Cloudflare purge and live
+# edge/origin acceptance — all inside scripts/profile-publish.py.
+# Dependency-free: no actions/* pulls, only the pinned job container.
+name: deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Verify the current main handoff, or publish it
+        type: choice
+        options: [plan, publish]
+        default: plan
+        required: true
+
+concurrency:
+  group: claudiuschuster-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Publish Official
+    runs-on: oss-oo-public
+    container:
+      image: docker.io/library/alpine:3.20
+    timeout-minutes: 25
+    env:
+      RELEASE_SHA: ${{ github.sha }}
+      RELEASE_MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'publish' }}
+      CF_RELEASE_TOKEN: ${{ secrets.CF_RELEASE_TOKEN }}
+      PROFILE_ORIGIN_IP: ${{ secrets.PROFILE_ORIGIN_IP }}
+      PROFILE_SSH_USER: ${{ secrets.PROFILE_SSH_USER }}
+      PROFILE_SSH_PORT: ${{ secrets.PROFILE_SSH_PORT }}
+      PROFILE_SSH_HOST_KEY: ${{ secrets.PROFILE_SSH_HOST_KEY }}
+      PROFILE_SSH_KEY: ${{ secrets.PROFILE_SSH_KEY }}
+      PROFILE_RUNTIME_SHA256: ${{ secrets.PROFILE_RUNTIME_SHA256 }}
+    steps:
+      - name: Install tools
+        run: apk add --no-cache make git bash python3 openssh-client curl
+
+      - name: Checkout the exact published main commit
+        run: |
+          git init -q .
+          git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+          git fetch --quiet origin "$GITHUB_SHA"
+          git checkout --quiet "$GITHUB_SHA"
+
+      - name: Validate the exact commit
+        run: make check
+
+      - name: Rebuild the production bundle
+        run: make build
+
+      - name: Run the selected publication mode
+        run: |
+          set -euo pipefail
+          python3 scripts/profile-publish.py \
+            --mode "$RELEASE_MODE" \
+            --commit "$RELEASE_SHA" \
+            | tee profile-publication-report.json
+
+      - name: Show the sanitized publication report
+        if: always()
+        run: |
+          if [ -s profile-publication-report.json ]; then
+            {
+              echo "## claudiuschuster.de publication"
+              echo
+              echo "Publication result:"
+              echo
+              python3 - profile-publication-report.json <<'PY'
+          import json, sys
+          try:
+              report = json.load(open(sys.argv[1], encoding="utf-8"))
+          except (OSError, ValueError):
+              print("Could not parse the sanitized JSON report")
+          else:
+              def value(name, fallback="unknown"):
+                  item = report.get(name, fallback)
+                  return str(item).lower() if isinstance(item, bool) else str(item)
+              print("| Mode | Verified | Commit | Target | Remote phase |")
+              print("| --- | --- | --- | --- | --- |")
+              print(f"| `{value('mode')}` | `{value('publication_verified')}` | "
+                    f"`{value('commit')}` | `{value('target')}` | "
+                    f"`{value('remote_phase', 'n/a')}` |")
+          PY
+            } | tee "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          fi
