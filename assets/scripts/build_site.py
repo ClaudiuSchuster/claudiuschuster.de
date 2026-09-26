@@ -89,12 +89,32 @@ def main() -> int:
     base_name = write_asset("base", "css", source_bytes("assets/base.css"))
     switch_name = write_asset("world-switch", "css", source_bytes("assets/world-switch.css"))
     atelier_name = write_asset("atelier", "css", source_bytes("assets/atelier.css"))
-    prismatic_name = write_asset("prismatic", "css", source_bytes("assets/prismatic.css"))
+
+    # oss-oo laboratory menu logos, vendored byte-identical from the
+    # laboratory asset repo (menu-logos, CC BY-SA 4.0). White wordmark for
+    # the dark atelier, dark wordmark for the bright prismatic world.
+    lab_dark_name = write_asset("oss-oo-logo-dark", "svg", source_bytes("assets/oss-oo-logo-dark.svg"))
+    lab_bright_name = write_asset("oss-oo-logo-bright", "svg", source_bytes("assets/oss-oo-logo-bright.svg"))
+
+    prismatic_text = source_bytes("assets/prismatic.css").decode("utf-8")
+    prismatic_text = require_replacement(
+        prismatic_text,
+        "assets/oss-oo-logo-bright.svg",
+        f"assets/{lab_bright_name}",
+        "assets/prismatic.css",
+    )
+    prismatic_name = write_asset("prismatic", "css", prismatic_text.encode("utf-8"))
 
     social_data = source_bytes("assets/social-preview.png")
     if png_dimensions(social_data) != (1200, 630):
         raise ValueError("social preview must be exactly 1200x630")
     social_name = write_asset("social-preview", "png", social_data)
+
+    # oss-oo laboratory menu logos, vendored byte-identical from the
+    # laboratory asset repo (menu-logos, CC BY-SA 4.0). White wordmark for
+    # the dark atelier, dark wordmark for the bright prismatic world.
+    lab_dark_name = write_asset("oss-oo-logo-dark", "svg", source_bytes("assets/oss-oo-logo-dark.svg"))
+    lab_bright_name = write_asset("oss-oo-logo-bright", "svg", source_bytes("assets/oss-oo-logo-bright.svg"))
 
     project_preview_names = {
         url: write_asset(label, "png", remote_bytes(url))
@@ -146,6 +166,7 @@ def main() -> int:
         "assets/social-preview.png": f"assets/{social_name}",
         "assets/profile.png": f"assets/{profile_name}",
         "assets/favicon.svg": f"assets/{favicon_name}",
+        "assets/oss-oo-logo-dark.svg": f"assets/{lab_dark_name}",
     }
     preview_replacements = {
         url: name for url, name in project_preview_names.items()
@@ -212,6 +233,8 @@ def main() -> int:
         boot_name,
         switcher_name,
         edge_transition_name,
+        lab_dark_name,
+        lab_bright_name,
         *project_preview_names.values(),
     }
     actual_assets = {path.name for path in DIST_ASSETS.iterdir()}

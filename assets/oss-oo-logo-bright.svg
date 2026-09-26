@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="456" viewBox="54 49 792 302" role="img" aria-labelledby="title desc">
+  <title id="title">oss-oo</title>
+  <desc id="desc">Horizontal oss-oo wordmark with a bold fused twin-crystal emblem and a subtle gold-cyan glow.</desc>
+  <defs>
+    <filter id="gold-glow" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6.5" result="outer-blur"/>
+      <feFlood flood-color="#f5c542" flood-opacity=".95" result="glow-color"/>
+      <feComposite in="glow-color" in2="outer-blur" operator="in" result="outer-glow"/>
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.7" result="inner-blur"/>
+      <feComposite in="glow-color" in2="inner-blur" operator="in" result="inner-glow"/>
+      <feMerge>
+        <feMergeNode in="outer-glow"/>
+        <feMergeNode in="inner-glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="cyan-glow" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6.5" result="outer-blur"/>
+      <feFlood flood-color="#62d0ff" flood-opacity=".95" result="glow-color"/>
+      <feComposite in="glow-color" in2="outer-blur" operator="in" result="outer-glow"/>
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.7" result="inner-blur"/>
+      <feComposite in="glow-color" in2="inner-blur" operator="in" result="inner-glow"/>
+      <feMerge>
+        <feMergeNode in="outer-glow"/>
+        <feMergeNode in="inner-glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff0aa"/>
+      <stop offset=".46" stop-color="#f5c542"/>
+      <stop offset="1" stop-color="#cc8417"/>
+    </linearGradient>
+    <linearGradient id="gold-cyan" x1="0" y1="0" x2="1" y2=".25">
+      <stop offset="0" stop-color="#f5c542"/>
+      <stop offset=".68" stop-color="#f5c542"/>
+      <stop offset="1" stop-color="#62d0ff"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(30 26) scale(.68)" fill-rule="evenodd" stroke="#0b0e14" stroke-width="10" stroke-linejoin="bevel">
+    <path fill="url(#gold)" d="M168 42 254 96 292 256 254 416 168 470 82 416 44 256 82 96Z M168 137 207 161 223 256 207 351 168 375 129 351 113 256 129 161Z" filter="url(#gold-glow)"/>
+    <path fill="url(#gold-cyan)" d="M344 42 430 96 468 256 430 416 344 470 258 416 220 256 258 96Z M344 137 383 161 399 256 383 351 344 375 305 351 289 256 305 161Z" filter="url(#cyan-glow)"/>
+    <g stroke="none">
+      <path d="M168 42 254 96 207 161 168 137Z" fill="#fff0aa" opacity=".68"/>
+      <path d="M292 256 254 416 207 351 223 256Z" fill="#a86b12" opacity=".55"/>
+      <path d="M344 42 430 96 383 161 344 137Z" fill="#d9f5ff" opacity=".92"/>
+      <path d="M468 256 430 416 383 351 399 256Z" fill="#62d0ff" opacity=".58"/>
+      <path d="m256 208 42 48-42 48-42-48Z" fill="#f5c542" stroke="#0b0e14" stroke-width="6" stroke-linejoin="bevel"/>
+      <path d="m256 232 21 24-21 24-21-24Z" fill="#fff4c8" opacity=".94"/>
+    </g>
+  </g>
+  <text x="395" y="254" font-family="Inter, Manrope, system-ui, sans-serif" font-size="152" font-weight="750" letter-spacing="-7" fill="#0b0e14">oss-<tspan fill="#946700">oo</tspan></text>
+</svg>
